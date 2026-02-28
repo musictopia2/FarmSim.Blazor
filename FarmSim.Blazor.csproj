@@ -3,10 +3,13 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
+	  <PackageId>Musictopia.$(MSBuildProjectName)</PackageId>
+	  <StaticWebAssetBasePath>_content/$(MSBuildProjectName)</StaticWebAssetBasePath>
     <ImplicitUsings>enable</ImplicitUsings>
     <RunPostBuildAppCondition Condition="'$(Configuration)' == 'Release'">true</RunPostBuildAppCondition>
     <FeedType>Public</FeedType>
   </PropertyGroup>
+	
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
@@ -15,6 +18,20 @@
     <PackageReference Include="Musictopia.FarmSim.Domain" Version="10.0.2" />
     <PackageReference Include="Musictopia.FarmSim.Images.Standard" Version="10.0.12" />
   </ItemGroup>
+	<Target Name="ValidateStaticWebAssetContract"
+        BeforeTargets="PrepareForBuild"
+        Condition="Exists('wwwroot')">
+
+		<Error Condition="'$(PackageId)' != 'Musictopia.$(MSBuildProjectName)'"
+			   Text="Static web asset contract violation.
+PackageId must be Musictopia.$(MSBuildProjectName).
+See solution pattern in project: Musictopia.FarmSim.Blazor (first fixed case)." />
+
+		<Error Condition="'$(StaticWebAssetBasePath)' != '_content/$(MSBuildProjectName)'"
+			   Text="Static web asset contract violation.
+StaticWebAssetBasePath must be _content/$(MSBuildProjectName).
+See solution pattern in project: Musictopia.FarmSim.Blazor (first fixed case)." />
+	</Target>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="C:\VS\OneNet\Apps\CommandLines\PostBuildPackageHandler\bin\Release\net10.0\PostBuildPackageHandler.exe $(ProjectName) $(ProjectDir) $(ProjectFileName) $(TargetDir)" Condition="'$(Configuration)' == 'Release' and '$(RunPostBuildAppCondition)' == 'true'" />
   </Target>
