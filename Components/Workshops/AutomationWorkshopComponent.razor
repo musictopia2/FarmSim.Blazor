@@ -1,0 +1,183 @@
+﻿@inherits TimedOnlyComponent
+
+<PopupViewport @bind-Visible="_showPicker"
+               TapToClose="true"
+               ShowHeaders="false">
+    <AmountPickerComponent ActionVerb="@_pickerVerb"
+                           Limit="_pickerLimit"
+                           OnSubmit="SubmitPickerAsync"
+                           OnCancel="ClosePicker" />
+</PopupViewport>
+
+<PopupViewport TapToClose=true
+               ShowHeaders="false"
+               @bind-Visible="_showPowerGloves">
+    <AutomationPowerGloveWorkshopComponent Workshop="Workshop"
+                                       OnClose="ClosePowerGloves" />
+</PopupViewport>
+<PopupViewport @bind-Visible="_showDecisionui"
+               TapToClose="true"
+               ShowHeaders="false">
+    <div class="image-button-wrapper">
+        <ImageButtonComponent Height="200"
+                              Name="@CurrencyKeys.FinishSingleWorkshop"
+                              OnClick="BulkSingleWorkshop" />
+
+
+        <div class="inventory-badge">
+            @InventoryManager.Get(CurrencyKeys.FinishSingleWorkshop)
+        </div>
+    </div>
+
+    <div class="image-button-wrapper">
+        <ImageButtonComponent Height="200"
+                              Name="@CurrencyKeys.PowerGloveWorkshop"
+                              OnClick="BulkPowerGloves" />
+
+        <div class="inventory-badge">
+            @InventoryManager.Get(CurrencyKeys.PowerGloveWorkshop)
+        </div>
+    </div>
+</PopupViewport>
+@if (_showConfirmation)
+{
+    <ConfirmationBlazor Title="Complete Active Item"
+                        Message="@GetConfirmationMessage"
+                        Results="ConfirmCompleteWorkshop" />
+}
+
+@if (_selectedItem is null)
+{
+    <div class="full-scrollable" style="padding: 0.75rem;">
+        <div style="display:flex; align-items:center; gap: 12px; margin-bottom: 12px;">
+            <ArrowLeftComponent TargetHeight="10vh" Clicked="PreviousClicked" />
+            <ArrowRightComponent TargetHeight="10vh" Clicked="NextClicked" />
+            <ResolvedImage Name="@Workshop.BuildingName" height="90" />
+            <div style="font-size: 2rem;">
+                @Workshop.BuildingName
+            </div>
+            <AutomationUpgradeReducedTimeButton Target="@Workshop.BuildingName" />
+            <AutomationUpgradeVirtualCountButton Target="@Workshop.BuildingName" PreviousVirtualCount="@_virtualCount" />
+        </div>
+
+        <div style="font-size: 1.8rem; margin-bottom: 12px;">
+            Choose what to automate in this workshop:
+        </div>
+
+        <WrapLayout ColumnWidth="140px" RenderList="_items" Context="item">
+            <StopClickPropagation>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:6px;"
+                     @onclick="() => SelectItem(item)">
+
+                    <ResolvedImage Name="@item" height="90" />
+
+                    @if (_outstandingByItem.TryGetValue(item, out var o) && o > 0)
+                    {
+                        <div style="font-size: 1.4rem;">
+                            Queue: @o
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="font-size: 1.4rem;">
+                            —
+                        </div>
+                    }
+                </div>
+            </StopClickPropagation>
+        </WrapLayout>
+    </div>
+    
+    return;
+}
+
+<StackLayout>
+    <StackItem>
+        <ArrowLeftComponent TargetHeight="10vh" Clicked="PreviousRecipe" />
+        <ArrowRightComponent TargetHeight="10vh" Clicked="NextRecipe" />
+        <AutomationUpgradeQueButton Target="@_selectedItem" PreviousQueCount="@_cap" />
+    </StackItem>
+    <StackItem>
+        @foreach (var req in FullRequirements)
+        {
+            <ItemRequirementDisplay OnClicked="NavigateTo"
+                                    Name="@req.Key"
+                                    
+                                    Required="req.Value"
+                                    Have="InventoryManager.Get(req.Key)"
+                                    ShowBorder="true" />
+        }
+        
+    </StackItem>
+    <StackItem>
+        <InventoryAmountIndicator Style="display:block;"
+                                  FontSize="2.5rem"
+                                  Height="60"
+                                  ItemName="@_selectedItem"
+                                  IconName="@_selectedItem" />
+    </StackItem>
+    <StackItem>
+        <div style="font-size: 2.5rem; margin-left: 30px;">
+            @WorkshopAutomationManager.GetDuration(_selectedItem)
+        </div>
+    </StackItem>
+</StackLayout>
+
+<div style="margin-top: 0.5rem; font-size: 2rem;">
+    <PrimaryButton FontSize="1.5rem" OnClick="BackToItems">
+        Back
+    </PrimaryButton>
+    @if (_processing)
+    {
+        <ImageButtonComponent Name="@CurrencyKeys.PowerGloveWorkshop" Height="80" OnClick="OnPowerGloveClicked" />
+        <ImageButtonComponent Name="@CurrencyKeys.FinishSingleWorkshop" Height="80" OnClick="OnFinishNowClicked" />
+        @if (AdvancedSettingsManager.Settings.Crafting.AutoUseFinishResources)
+        {
+            <ImageButtonComponent Name="@Images.Standard.Assets.PngImageAssets.WorkshopDecision" Height="80" OnClick="StartDecision" />
+        }
+    }
+</div>
+
+@if (_blocked)
+{
+    <div style="margin-top: 1rem;">
+        Blocked: either barn was full or did not have the required items to craft with.
+    </div>
+}
+else if (_outstanding <= 0)
+{
+    <div style="margin-top: 1rem;">
+        No request active. Choose how many to request (max @(_cap)).
+    </div>
+}
+else
+{
+    <div style="margin-top: 1rem;">
+        Requested queue: @_outstanding / @_cap (Remaining capacity: @_remaining)
+    </div>
+
+    <div>
+        Next ready: @_nextReadyDisplay
+    </div>
+}
+
+<div style="margin-top: 1rem;">
+    @if (_outstanding <= 0)
+    {
+        <PrimaryButton FontSize="1.5rem" OnClick="OpenRequestPicker">
+            Request
+        </PrimaryButton>
+    }
+    else if (_remaining > 0)
+    {
+        <PrimaryButton FontSize="1.5rem" OnClick="OpenAddPicker">
+            Add More
+        </PrimaryButton>
+    }
+    else
+    {
+        <div style="font-size: 2rem;">
+            <span>At capacity.</span>
+        </div>
+    }
+</div>

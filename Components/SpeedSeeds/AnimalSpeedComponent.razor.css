@@ -1,0 +1,54 @@
+﻿
+.ss-scroll {
+    height: 50vh;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.ss-seed-count {
+    text-align: right;
+    font-size: 2rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.ss-card {
+    width: 100%;
+    border: 1px solid #d7d7d7;
+    border-radius: 12px;
+    padding: 6px;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: auto auto auto auto;
+    gap: 6px;
+    background: white;
+}
+
+.ss-title {
+    font-size: 0.75rem;
+    line-height: 1.05;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
+}
+
+.ss-produces {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+}
+
+::deep .ss-produces-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.ss-req {
+    display: flex;
+    justify-content: center;
+}

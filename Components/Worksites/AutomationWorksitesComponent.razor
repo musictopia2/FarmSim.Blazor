@@ -1,0 +1,25 @@
+@inherits TimedOnlyComponent
+
+<WrapLayout RenderList="_worksites" ColumnWidth="110px" Context="worksite">
+    @{
+        // In automation mode, rewards are auto-deposited, so "ready" here means
+        // there is work queued and the next run is about to complete.
+        var remaining = WorksiteAutomationManager.GetTimeUntilNextReady(worksite);
+        bool ready = remaining is not null && remaining.Value <= TimeSpan.Zero;
+    }
+
+    <div class="worksite-tile @(ready ? "ready" : "")">
+        <ImageButtonComponent
+            Class="worksite"
+            OnClick="() => SelectWorksiteAsync(worksite)"
+            Height="100"
+            Name="@worksite" />
+
+        @if (ready)
+        {
+            <div class="worksite-ready-overlay" aria-hidden="true">
+                <div class="worksite-ready-qm">!</div>
+            </div>
+        }
+    </div>
+</WrapLayout>

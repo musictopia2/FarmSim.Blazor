@@ -1,0 +1,159 @@
+/* --- Crop Picker (top) --- */
+
+.crop-selected-line {
+    height: 26px; /* fixed space = no layout shift */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    padding: 0 2px;
+}
+
+.crop-selected-label {
+    font-weight: 900;
+}
+
+.crop-selected-value {
+    font-weight: 600;
+}
+
+.crop-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0; /* no gaps */
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+}
+
+.crop-pick-tile {
+    width: 60px;
+    height: 60px;
+    border-radius: 0;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: rgba(255,255,255,0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    position: relative; /* IMPORTANT for badge positioning */
+    overflow: hidden; /* prevents badge from spilling outside */
+}
+
+    /* Next crop (locked) overlay */
+    .crop-pick-tile.locked {
+        cursor: default; /* or not-allowed if you prefer */
+    }
+
+::deep .crop-lock {
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 25px;
+    height: 25px;
+    pointer-events: none;
+    object-fit: contain;
+}
+
+/* Inventory amount badge */
+.inv-badge {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    /* fixed-ish badge sizing so it never changes layout */
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 16px;
+    background: rgba(0,0,0,0.75);
+    color: white;
+    /* prevent cut-off and shifting */
+    max-width: 52px; /* 60 - padding */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+}
+
+.crop-pick-tile.selected {
+    background: aqua; /* requested */
+}
+
+::deep .crop-pick-img {
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+/* --- Farm Tight Grid --- */
+.farm-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0; /* no gaps */
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0;
+    margin: 0;
+}
+
+.farm-tile {
+    width: 60px;
+    height: 60px;
+    margin: 0;
+    padding: 0;
+}
+
+.crop-card {
+    width: 60px;
+    height: 60px;
+    margin: 0;
+    border-radius: 0; /* snap together */
+    border: 1px solid rgba(0,0,0,0.12); /* thin gridline (optional) */
+    cursor: pointer;
+    user-select: none;
+}
+
+.crop-slot {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+::deep .crop-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.empty-plot {
+    width: 20px;
+    height: 20px;
+    border-radius: 0; /* snap together */
+    border: 2px dashed rgba(0,0,0,0.15);
+    background: rgba(0,0,0,0.03);
+}
+
+.crop-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid rgba(0,0,0,0.10);
+    color: #333;
+    pointer-events: none; /* so clicking the badge still clicks the card */
+}

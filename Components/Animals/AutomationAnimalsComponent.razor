@@ -1,0 +1,16 @@
+﻿@inherits FarmComponentBase
+
+@if (_animal is not null)
+{
+    <AutomationAnimalComponent Animal="@_animal"
+                               NextClicked="Next"
+                               PreviousClicked="Previous" />
+    return;
+}
+<div class="full-scrollable">
+    <WrapLayout ColumnWidth="200px" RenderList="_animals" Context="animal">
+        <ImageButtonComponent OnClick="() => OnCLick(animal)"
+                              Name="@animal.AnimalName"
+                              Height="200" />
+    </WrapLayout>
+</div>

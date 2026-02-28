@@ -1,0 +1,192 @@
+﻿
+
+/* This becomes “the area under the tab bar” */
+.shop-tab-body {
+    flex: 1 1 auto;
+    min-height: 0; /* IMPORTANT */
+    display: flex;
+    flex-direction: column;
+}
+
+/* This is what actually scrolls */
+.shop-scroll {
+    flex: 1 1 auto;
+    min-height: 0; /* IMPORTANT */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.shop-card {
+    width: 100%;
+    height: 120px;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #d7d7d7;
+    border-radius: 12px;
+    display: grid;
+    grid-template-rows: auto auto; /* <-- important (NOT 34px 1fr) */
+    row-gap: 6px;
+    align-content: start;
+}
+
+    .shop-card:hover {
+        border-color: #bdbdbd;
+    }
+
+    .shop-card:active {
+        transform: translateY(1px);
+    }
+
+    .shop-card.is-locked {
+        opacity: 0.85;
+    }
+
+    .shop-card.is-maxed {
+        opacity: 0.95;
+    }
+
+/* Make the status column big enough for 30px icons */
+.shop-card-top {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    align-items: start; /* <-- change this */
+    column-gap: 8px;
+}
+
+.shop-title {
+    min-width: 0; /* key change */
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.shop-title-wrap {
+    min-width: 0;
+    display: grid;
+    row-gap: 2px;
+}
+
+.shop-subtitle {
+    font-size: 0.95rem;
+    font-weight: 700;
+    opacity: 0.75;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* The status cell */
+.shop-status {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+}
+
+/* Normalize ALL status variants to be block-level, same size */
+::deep .shop-status-img,
+.shop-status-placeholder,
+.shop-status-svg svg {
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
+/* Prevent SVG baseline/line-height weirdness */
+.shop-status-svg {
+    line-height: 0;
+    display: grid;
+    place-items: center;
+    color: #1e9e50;
+}
+
+.shop-status-placeholder {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+}
+
+/* Bottom row */
+.shop-card-bottom {
+    display: grid;
+    grid-template-columns: 1fr 80px 60px; /* costs | owned/max | item image */
+    align-items: center;
+    column-gap: 6px;
+}
+
+/* Costs slot (fixed height + wraps inside) */
+.shop-costs {
+    min-width: 0;
+    height: 60px; /* fixed slot */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.shop-muted {
+    font-size: 1.1rem;
+    font-weight: 600;
+    opacity: 0.75;
+}
+
+/* One cost pill (icon + number) */
+.shop-cost-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 5px;
+    border: 1px solid #e2e2e2;
+    border-radius: 999px;
+    background: #fafafa;
+    flex: 0 0 auto;
+}
+
+::deep .shop-cost-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+
+.shop-cost-amt {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* Owned/max slot */
+.shop-owned {
+    text-align: right;
+    font-size: 1.1rem;
+    font-weight: 800;
+    opacity: 0.85;
+    white-space: nowrap;
+}
+
+
+
+
+.shop-owned-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    opacity: 0.7;
+}
+
+.shop-owned-value {
+    font-size: 1.2rem;
+    font-weight: 900;
+}
+
+
+
+
+.shop-item-img {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+}

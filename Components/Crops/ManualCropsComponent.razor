@@ -1,0 +1,107 @@
+﻿@inherits TimedOnlyComponent
+<PopupViewport ShowHeaders="false"
+               @bind-Visible="_showUpgrades"
+               TapToClose="true">
+    <ManualUpgradeCropModal CropName="@_selectedItem"
+                      OnUpgraded="Upgraded" />
+</PopupViewport>
+<div class="mb-1">Select Crop to Plant:</div>
+
+<div class="crop-selected-line" aria-live="polite">
+    <span class="crop-selected-label">Selected:</span>
+    <span class="crop-selected-value">
+        @GetFirstDetails
+    </span>
+</div>
+
+<div class="crop-picker">
+    @foreach (var item in _crops)
+    {
+        var isSelected = _selectedItem == item;
+
+        <div class="crop-pick-tile @(isSelected ? "selected" : "")"
+             role="button"
+             tabindex="0"
+             title="@item"
+             @onclick="() => SelectCrop(item)">
+            <div class="inv-badge">@InventoryAmount(item)</div>
+            <ResolvedImage class="crop-pick-img"
+                           Name="@item"
+                           Alt="@item" />
+
+        </div>
+    }
+    @if (_nextCrop is not null)
+    {
+        <div class="crop-pick-tile locked" @onclick="CropLockedDetails" title="Next crop (locked)">
+            <ResolvedImage class="crop-pick-img"
+                           Name="@_nextCrop.ItemName" />
+            <ResolvedImage Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Padlock"
+                           Alt="Locked"
+                           class="crop-lock" />
+
+
+        </div>
+    }
+
+
+</div>
+
+
+<div class="farm-grid">
+    @foreach (var id in CropManager.GetUnlockedCrops)
+    {
+        EnumCropState state = GetState(id);
+
+        <div class="farm-tile">
+            <div class="card text-center crop-card"
+                 role="button"
+                 style="background-color: @GetBackground(state);"
+                 tabindex="0"
+                 @onclick="() => OnCardClick(id)">
+                <div class="card-body p-1 position-relative d-flex flex-column">
+
+                    <!-- Top-right badge tells what clicking does -->
+                    <div class="crop-badge" title="@GetBadgeTitle(state)">
+                        @BadgeSvg(state)
+                    </div>
+
+                    <!-- Main slot content -->
+                    <div class="crop-slot flex-grow-1 d-flex align-items-center justify-content-center">
+                        @if (state == EnumCropState.Empty)
+                        {
+                            <div class="empty-plot" aria-label="Empty plot"></div>
+                        }
+                        else
+                        {
+                            <ResolvedImage class="crop-img"
+                                           Name="@CropManager.GetCropName(id)" />
+
+                        }
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div>
+    <PrimaryButton OnClick="PlantMax">
+        Plant Maximum Crops
+    </PrimaryButton>
+    <PrimaryButton OnClick="HarvestMax">
+        Harvest All
+    </PrimaryButton>
+    @if (_upgradesEverAvailable && _selectedItem is not null)
+    {
+        <SuccessButton OnClick="@ShowUpgrades">
+            Get Upgrades
+        </SuccessButton>
+    }
+</div>
+
+<BasicProgressModal @bind-Visible="_showProgressModal">
+    <CropProgress Id="_progressCropId" />
+</BasicProgressModal>

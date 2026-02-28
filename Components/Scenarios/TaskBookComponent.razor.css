@@ -1,0 +1,49 @@
+﻿.track-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 2px solid #666;
+    background: white;
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 1;
+}
+
+    .track-btn.tracked {
+        background: #ffe08a;
+    }
+
+.scenario-chip {
+    border: 2px solid #666;
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-weight: 900;
+}
+
+.scenario-book-root {
+    min-width: 360px;
+}
+
+/* 5 items per row on desktop */
+.scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+    user-select: none;
+}
+
+/* Make cards equal height */
+.task-grid-item {
+    display: flex;
+}
+
+    .task-grid-item .card {
+        width: 100%;
+    }
+
+.task-name {
+    white-space: normal; /* allow wrapping */
+    overflow-wrap: anywhere; /* break long words if needed */
+    line-height: 1.15;
+    max-height: 2.3em; /* ~2 lines */
+}

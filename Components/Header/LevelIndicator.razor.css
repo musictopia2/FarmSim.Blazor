@@ -1,0 +1,64 @@
+﻿.lvl-root {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    cursor: pointer;
+    width: 280px;
+}
+.lvl-badge {
+    width: 69px;
+    display: flex; /* ensure alignment works */
+    align-items: center;
+    justify-content: flex-end; /* RIGHT align the level number */
+
+    font-weight: 700;
+    color: white;
+    font-variant-numeric: tabular-nums; /* prevents digit jitter */
+    padding-right: 6px; /* optional breathing room */
+}
+.lvl-bar {
+    position: relative;
+    height: 40px;
+    background-color: slategrey;
+    border: 2px solid #cfcfcf;
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-width: 200px;
+}
+
+/* markers go UNDER the purple fill */
+.lvl-marker {
+    position: absolute;
+    width: 1px; /* hairline */
+    top: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.65);
+    transform: translateX(-0.5px); /* center the 1px line exactly */
+    z-index: 1;
+}
+
+/* fill goes ON TOP of markers */
+.lvl-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    background: #7a3ff2;
+    z-index: 2;
+}
+
+/* text stays on top of everything */
+.lvl-text {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    pointer-events: none;
+    user-select: none;
+    z-index: 3;
+}

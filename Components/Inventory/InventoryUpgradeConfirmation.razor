@@ -1,0 +1,12 @@
+﻿@inherits FarmComponentBase
+@if (_canUpgrade == false)
+{
+    <div>
+        Cannot upgrade
+    </div>
+    return;
+}
+<ImageButtonComponent Height="300"
+                      Style="background-color: red;"
+                      Name="@_name"
+                      OnClick="OnUpgrade" />

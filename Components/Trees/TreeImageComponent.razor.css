@@ -1,0 +1,5 @@
+::deep .inventory-positioning {
+    top: 60px;
+    left: 40px;
+    position: absolute;
+}

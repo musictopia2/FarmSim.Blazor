@@ -1,0 +1,26 @@
+﻿@inherits FarmComponentBase
+
+<div class="full-scrollable">
+    @if (_anyAdvancedUpgrades)
+    {
+        <div>
+            <PrimaryButton Style="width: 150px;" OnClick="ToggleUpgradeMode">
+                @(_upgradeMode ? "Done" : "Get Upgrades")
+            </PrimaryButton>
+            @if (_upgradeMode)
+            {
+                <span>
+                    Upgrade mode: tap an animal
+                </span>
+            }
+        </div>
+    }
+    
+    <WrapLayout RenderList="_animals" ColumnWidth="60px" Context="animal">
+        <ManualAnimalComponent @key="animal.Id" Animal="animal"
+            UpgradeMode=_upgradeMode
+            OnUpgraded="Upgraded"
+        />
+    </WrapLayout>
+</div>
+

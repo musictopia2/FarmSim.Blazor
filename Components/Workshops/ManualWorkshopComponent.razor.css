@@ -1,0 +1,371 @@
+﻿
+
+
+.craft-stack {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+/* Big tap target for tablets */
+.bulk-hit {
+    position: absolute;
+    right: -6px;
+    bottom: -6px;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 2px solid rgba(0, 0, 0, 0.55);
+    display: grid;
+    place-items: center;
+    z-index: 10;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.bulk-hit-svg {
+    width: 50px;
+    height: 50px;
+    pointer-events: none; /* svg itself shouldn't steal taps */
+}
+
+.upgrade-slot {
+    height: 50px;
+    width: 100px;
+    margin-top: 10px;
+    border: 2px solid #666;
+    border-radius: 8px;
+    background: white;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible; /* allow badge to sit outside border */
+}
+.queue-slot {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #666;
+    border-radius: 8px;
+    background: white;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible; /* allow badge to sit outside border */
+}
+
+.queue-slot-active {
+    width: 70px;
+    height: 70px;
+}
+
+    .queue-slot-active .queue-img {
+        width: 60px;
+        height: 60px;
+    }
+
+.queue-slot-inactive {
+    margin-top: 10px; /* centers 50px slot next to 70px slot */
+}
+
+::deep .queue-img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.queue-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0 6px;
+    height: 18px;
+    line-height: 18px;
+    border: 1px solid #666;
+    border-radius: 10px;
+    background: white;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+/* Reserve the *entire* area for both buttons so nothing shifts */
+.boost-buttons-reserve {
+    display: flex;
+    gap: 8px; /* whatever spacing you want */
+    height: 80px; /* same as icon size */
+    align-items: center;
+}
+
+/* Each button reserves its own width too */
+.boost-btn {
+    width: 80px; /* locks footprint */
+    height: 80px;
+    display: flex;
+    
+}
+
+/* Hide but keep space */
+.boost-hidden {
+    visibility: hidden;
+    pointer-events: none;
+}
+.req-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 300px;
+}
+
+.req-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid #666;
+    border-radius: 10px;
+    background: white;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+.req-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+
+.req-text {
+    min-width: 0;
+}
+
+.req-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.req-detail {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.workshop-header {
+    box-sizing: border-box;
+    user-select: none;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden; /* prevents tiny horizontal scrollbars */
+    display: grid;
+    grid-template-columns: 52px 150px 1fr 52px; /* smaller = less likely to overflow */
+    align-items: center;
+    column-gap: 10px;
+    padding: 0 6px; /* small, safe padding */
+}
+
+/* arrow "button" wrapper */
+.workshop-nav {
+    box-sizing: border-box;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    min-width: 0; /* don't force grid wider */
+}
+
+    /* Move left arrow right (toward title) */
+    .workshop-nav.left {
+        justify-content: flex-end;
+    }
+
+    /* Move right arrow left (toward title) */
+    .workshop-nav.right {
+        justify-content: flex-start;
+    }
+
+
+
+.workshop-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    gap: 12px;
+    white-space: nowrap;
+}
+
+.rental-pill {
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 2px solid #fff;
+    background: rgba(0,0,0,0.78);
+    color: #fff;
+    font-weight: 900;
+    font-size: 14px;
+    /* reserve width so title doesn't jump */
+    min-width: 165px; /* tweak if needed */
+    text-align: center;
+}
+
+.rental-pill-hidden {
+    visibility: hidden; /* keeps space */
+    pointer-events: none;
+}
+
+
+.upgrade-cost-btn {
+    background-color: lime;
+}
+
+
+    .upgrade-cost-btn:active {
+        transform: translateY(1px);
+    }
+
+    .upgrade-cost-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+::deep .coin-img {
+    display: block;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.upgrade-cost-text {
+    font-size: 1.1rem;
+    line-height: 1;
+    font-weight: 900;
+}
+
+
+.workshop-recipe-icon {
+    position: relative;
+    width: 120px; /* IMPORTANT: match button height/footprint */
+    display: flex;
+    flex-direction: column; /* stack vertically */
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* each button gets a stable box so nothing “nudges” left/right */
+.craft-btn {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: grid;
+    place-items: center;
+}
+
+    /* make sure the button inside ImageButtonComponent fills this box
+   (scoped CSS needs ::deep for child component markup) */
+    .craft-btn ::deep(button),
+    .craft-btn ::deep(.image-button),
+    .craft-btn ::deep(img) {
+        width: 120px;
+        height: 120px;
+    }
+
+/* bulk badge overlay */
+.bulk-overlay {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 2px solid rgba(0, 0, 0, 0.55);
+    display: grid;
+    place-items: center;
+    z-index: 5;
+    pointer-events: none; /* tablet-friendly */
+}
+
+.bulk-overlay-svg {
+    width: 22px;
+    height: 22px;
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.workshop-recipe-img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.workshop-recipe-icon.locked {
+    opacity: 0.55; /* same vibe as locked animal option */
+}
+
+::deep .workshop-lock {
+    position: absolute;
+    left: 2px;
+    bottom: 2px;
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.workshop-vert-nav {
+    display: grid; /* or flex column; grid is easiest */
+    grid-template-rows: auto auto; /* two rows always */
+    row-gap: 8px;
+    margin-left: 15px;
+    justify-items: center;
+    align-items: center;
+}
+
+/* each row reserves the same space */
+.workshop-vert-slot {
+    height: 10vh; /* matches your TargetHeight intent */
+    min-height: 52px; /* prevents tiny screens collapsing */
+    width: 52px; /* keeps a consistent click area */
+    display: grid;
+    place-items: center;
+}
+
+
+.image-button-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.inventory-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    min-width: 32px;
+    height: 28px;
+    padding: 0 8px;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 28px;
+    text-align: center;
+    border-radius: 14px;
+    pointer-events: none; /* important for tablets */
+    z-index: 5;
+}

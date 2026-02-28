@@ -1,0 +1,48 @@
+﻿.chest-summary-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    
+}
+.reward-card {
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reward-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.reward-title {
+    font-weight: 700;
+}
+
+.reward-subtitle {
+    opacity: .8;
+    font-size: .9rem;
+}
+
+.reward-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.reward-amount-label {
+    opacity: .75;
+    font-size: .85rem;
+    margin-right: 6px;
+}
+
+.reward-amount-value {
+    font-weight: 700;
+}

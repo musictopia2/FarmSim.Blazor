@@ -1,0 +1,288 @@
+﻿@inherits TimedOnlyComponent
+
+<PopupViewport TapToClose=true
+                ShowHeaders="false"
+               @bind-Visible="_showPowerGloves">
+    <ManualPowerGloveWorkshopComponent Workshop="Workshop"
+        OnClose="ClosePowerGloves"
+        />
+</PopupViewport>
+
+<PopupViewport @bind-Visible="_showUpgrades"
+               TapToClose="true"
+               ShowHeaders="false">
+    <ManualUpgradeWorkshopModal Workshop="Workshop"
+                        OnUpgraded="Upgraded" />
+</PopupViewport>
+
+
+<PopupViewport @bind-Visible="_showDecisionui"
+               TapToClose="true"
+               ShowHeaders="false">
+    <div class="image-button-wrapper">
+        <ImageButtonComponent Height="200"
+                              Name="@CurrencyKeys.FinishSingleWorkshop"
+                              OnClick="BulkSingleWorkshop" />
+        
+
+        <div class="inventory-badge">
+            @InventoryManager.Get(CurrencyKeys.FinishSingleWorkshop)
+        </div>
+    </div>
+
+    <div class="image-button-wrapper">
+        <ImageButtonComponent Height="200"
+                              Name="@CurrencyKeys.PowerGloveWorkshop"
+                              OnClick="BulkPowerGloves" />
+
+        <div class="inventory-badge">
+            @InventoryManager.Get(CurrencyKeys.PowerGloveWorkshop)
+        </div>
+    </div>
+</PopupViewport>
+
+@if (_showConfirmation)
+{
+    <ConfirmationBlazor Title="Complete Active Item"
+        Message="@GetConfirmationMessage"
+        Results="ConfirmCompleteWorkshop"
+        />
+}
+
+@if (_recipes.Count == 0)
+{
+    <div class="alert alert-warning">
+        No recipes available for this workshop.
+    </div>
+    return;
+}
+@* <div style="font-size: 1.6rem; font-weight: bold;">
+    Queue slots: @_capacity
+</div> *@
+<div style="height: 30px;">
+
+</div>
+@{
+    var visibleQueue = GetVisibleQueue();
+    bool anyActive = visibleQueue.Any(x => x.State == EnumWorkshopState.Active);
+}
+
+@if (this.IsCooperative == false)
+{
+    <div style="margin-top: -40px" class="boost-buttons-reserve">
+
+        <div class="@(anyActive ? "" : "boost-hidden")"
+             @onclick="OnFinishNowClicked">
+            <BoostIconComponent Name="@CurrencyKeys.FinishSingleWorkshop" ImageSize="80" />
+        </div>
+        <div style="margin-left: -20px;" class="@(anyActive ? "" : "boost-hidden")"
+             @onclick="OnPowerGloveClicked">
+            <BoostIconComponent Name="@CurrencyKeys.PowerGloveWorkshop" ImageSize="80" />
+        </div>
+
+        @if (AdvancedSettingsManager.Settings.Crafting.AutoUseFinishResources)
+        {
+            <div style="margin-left: -20px;" class="@(anyActive ? "" : "boost-hidden")"
+                 @onclick="StartDecision">
+                <BoostIconComponent Name="WorkshopDecision" ImageSize="80" />
+            </div>
+        }
+    </div>
+}
+
+<StackLayout ItemSpacing="5px">
+    <SimpleRepeater HowMany="_capacity" Context="slotIndex">
+        @{
+            // slotIndex is the DISPLAY slot (1..capacity), not the real slot anymore
+            CraftingSummary? current = null;
+            int i = slotIndex - 1;
+            if (i >= 0 && i < visibleQueue.Count)
+            {
+                current = visibleQueue[i];
+            }
+
+            bool stopBubble = current is not null && slotIndex == 1;
+        }
+
+        <StackItem StopClickPropagation="stopBubble">
+            <div class="queue-slot @SlotClass(slotIndex)">
+                @if (current is not null)
+                {
+                    @if (current.State == EnumWorkshopState.Active)
+                    {
+                        <div class="queue-badge">
+                            @GetTimeText(current)
+                        </div>
+                    }
+                    <ResolvedImage 
+                        class="queue-img"
+                        Name="@current.Name"
+                        />
+                }
+            </div>
+        </StackItem>
+    </SimpleRepeater>
+
+    @* NEW: upgrade button shown only if NOT maxed *@
+    @if (CanShowPossibleNewCapacity)
+    {
+        <StackItem>
+
+
+
+
+            <div class="upgrade-slot upgrade-cost-btn" @onclick="UpgradeWorkshopCapacity">
+                <ResolvedImage 
+                    Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Coin"
+                    Alt="Coin"
+                    class="coin-img"
+                    />
+                <span class="upgrade-cost-text">@UpgradeManager.NextWorkshopCapacityCoinCost(Workshop)</span>
+                
+            </div>
+        </StackItem>
+       
+    }
+
+</StackLayout>
+<div class="workshop-header" @onclick:stopPropagation="true">
+    <button type="button" class="workshop-nav" @onclick="PreviousClicked" aria-label="Previous workshop">
+        <ArrowLeftComponent TargetHeight="10vh" />
+        
+    </button>
+    @if (_anyAdvancedUpgrades)
+    {
+        <SuccessButton OnClick="ShowUpgrades">
+            Get Upgrades
+        </SuccessButton>
+    }
+    else
+    {
+        <div>
+
+        </div>
+    }
+    <div class="workshop-title">
+        <span class="workshop-name">@WorkshopDetails</span>
+
+        <span class="rental-pill @(string.IsNullOrWhiteSpace(_lastRentalText) ? "rental-pill-hidden" : "")">
+            Rental: @_lastRentalText
+        </span>
+    </div>
+
+    <button type="button" class="workshop-nav" @onclick="NextClicked" aria-label="Next workshop">
+        <ArrowRightComponent TargetHeight="10vh" />
+    </button>
+</div>
+
+<StackLayout>
+    <StackItem>
+        <div class="req-list">
+            @foreach (var req in FullRequirements)
+            {
+
+                <ItemRequirementDisplay 
+                    OnClicked="NavigateTo"
+                    Name="@req.Key"
+                    Required="req.Value"
+                    Have="InventoryManager.Get(req.Key)"
+                    ShowBorder="true"
+                    />
+
+                
+            }
+        </div>
+
+    </StackItem>
+    <StackItem StopClickPropagation>
+        <ResolvedImage 
+            Name="@Workshop.Name"
+            height="200"
+            />
+    </StackItem>
+   
+    <StackItem StopClickPropagation>
+        <div style="font-size: 2rem; width: 300px; display: flex; flex-direction: column; gap: 6px;">
+
+            <!-- Barn + amount: right aligned -->
+            <div style="display: flex; align-items: center; gap: 8px; justify-content: flex-end;">
+                <ResolvedImage 
+                    Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Barn" 
+                        height="30"
+                    />
+                    
+                <span>@CurrentAmount</span>
+            </div>
+
+            <!-- Chosen item row: image left, text flush right, stable -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+
+                <div class="workshop-recipe-icon @(CurrentRecipe.Unlocked ? "" : "locked")">
+                    <div class="craft-stack">
+                        <ImageButtonComponent Name="@ChosenItem"
+                                              Height="120"
+                                              OnClick="CraftSingle" />
+
+                        @if (AdvancedSettingsManager.Settings.Crafting.EnableBulkCraftButton)
+                        {
+                            <button type="button"
+                                    class="bulk-hit"
+                                    @onclick="CraftBulk"
+                                    @onclick:stopPropagation
+                                    aria-label="Craft as many as possible">
+                                <svg viewBox="0 0 24 24" class="bulk-hit-svg" aria-hidden="true">
+                                    <rect x="5" y="5" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2" />
+                                    <rect x="9" y="9" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2" opacity="0.85" />
+                                    <path d="M19 6v6M16 9h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                </svg>
+                            </button>
+                        }
+                    </div>
+
+                    @if (CurrentRecipe.Unlocked == false)
+                    {
+                        <ResolvedImage 
+                            Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Padlock" 
+                                Alt="Locked"
+                                class="workshop-lock"
+                            />
+                            
+                        
+                    }
+                </div>
+
+                
+
+                <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.1; align-items: flex-end; text-align: right;">
+                    <div style="max-width: 100%;
+                        overflow: hidden;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;">
+                        @ChosenItem.GetWords
+                    </div>
+                    <div style="max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        @DetailText
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </StackItem>
+
+    <StackItem StopClickPropagation="true">
+        <div class="workshop-vert-nav">
+            <div class="workshop-vert-slot" style="visibility:@(CanGoUp ? "visible" : "hidden")">
+                <ArrowUpComponent TargetHeight="10vh"
+                                  Clicked="GoUp" />
+            </div>
+
+            <div class="workshop-vert-slot" style="visibility:@(CanGoDown ? "visible" : "hidden")">
+                <ArrowDownComponent TargetHeight="10vh"
+                                    Clicked="GoDown" />
+            </div>
+        </div>
+        
+    </StackItem>
+</StackLayout>

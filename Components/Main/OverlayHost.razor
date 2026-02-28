@@ -1,0 +1,72 @@
+﻿@inherits FarmComponentBase
+<PopupViewport
+    Visible="overlay.ShowLevelDetails"
+               VisibleChanged="overlay.SetLevelsVisible"
+    TapToClose="true"
+    ShowHeaders="false"
+>
+    <LevelDetailsModal />
+</PopupViewport>
+
+<PopupViewport Visible="overlay.ShowWorkshops"
+               VisibleChanged="overlay.SetWorkshopVisible"
+               TapToClose="true">
+    <StopClickPropagation>
+        @if (overlay.CurrentWorkshop is not null)
+        {
+            <ManualWorkshopsComponent @key="overlay.RenderKey" SpecificWorkshop="@overlay.CurrentWorkshop" />
+        }
+        else
+        {
+            <AutomationWorkshopsComponent @key="overlay.RenderKey" SpecificWorkshop="@overlay.CurrentAutomatedWorkshop" />
+        }
+    </StopClickPropagation>
+</PopupViewport>
+
+
+<ShowWorksiteModal LocationChanged="overlay.OpenPossibleWorksiteAsync"
+                   Location="@overlay.CurrentWorksite"
+                   Visible="overlay.ShowWorksites"
+                   VisibleChanged="overlay.SetWorksiteVisible" />
+<PopupViewport Visible="overlay.ShowQuestOrScenarioBook"
+               HeaderTitle="@_flexibleHeader"
+               CloseButtonClick="overlay.CloseQuestOrScenarioBook">
+    <StopClickPropagation>
+        @if (Key.IsBaseline)
+        {
+            <QuestBookComponent />
+        }
+        else
+        {
+            <TaskBookComponent />
+        }
+    </StopClickPropagation>
+
+</PopupViewport>
+
+<PopupViewport Visible="overlay.ShowAnimals"
+               VisibleChanged="overlay.SetAnimalsVisible"
+                     TapToClose="true">
+    <StopClickPropagation>
+        <AnimalsComponent />
+    </StopClickPropagation>
+    
+</PopupViewport>
+
+<PopupViewport Visible="overlay.ShowCrops"
+               VisibleChanged="overlay.SetCropsVisible"
+                     TapToClose="true">
+    <StopClickPropagation>
+        <CropsComponent />
+    </StopClickPropagation>
+    
+</PopupViewport>
+
+<PopupViewport Visible="overlay.ShowTrees"
+               VisibleChanged="overlay.SetTreesVisible"
+               TapToClose="true">
+    <StopClickPropagation>
+        <TreesComponent />
+    </StopClickPropagation>
+
+</PopupViewport>

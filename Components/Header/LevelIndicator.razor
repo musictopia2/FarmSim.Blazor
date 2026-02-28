@@ -1,0 +1,32 @@
+﻿@inherits FarmComponentBase
+<StopClickPropagation>
+    <div class="lvl-root" @onclick="OpenLevelDetailsAsync" title="Level @Level">
+        @if (ProgressionManager.CompletedGame == false)
+        {
+            <div class="lvl-badge">@Level</div>
+
+            <div class="lvl-bar"
+                 role="progressbar"
+                 aria-label="Level progress"
+                 aria-valuemin="0"
+                 aria-valuemax="@PointsRequired"
+                 aria-valuenow="@CurrentPoints">
+
+                @* milestone tick marks (under the fill) *@
+                @if (PointsRequired > 0)
+                {
+                    foreach (var m in Milestones)
+                    {
+                        if (m > 0 && m < PointsRequired)  // skip 0% and 100%
+                        {
+                            <div class="lvl-marker" style="left:@MilestoneLeft(m)"></div>
+                        }
+                    }
+                }
+
+                <div class="lvl-fill" style="width:@ProgressPercent"></div>
+                <div class="lvl-text">@ProgressText</div>
+            </div>
+        }
+    </div>
+</StopClickPropagation>

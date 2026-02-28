@@ -1,0 +1,85 @@
+﻿.ae-root {
+    height: 50vh;
+    overflow-y: auto;
+}
+
+.ae-empty {
+    padding: 20px;
+    border-radius: 14px;
+    background: rgba(0,0,0,0.25);
+}
+
+.ae-empty-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.ae-empty-sub {
+    margin-top: 6px;
+    opacity: 0.85;
+}
+.ae-main{
+    margin-left: 5px;
+}
+
+.ae-card {
+    border: 1px solid;
+    border-radius: 14px;
+    border-color: black;
+}
+
+.ae-icon {
+    width: 72px;
+    display: grid;
+    place-items: center;
+}
+.ae-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0; /* allows ellipsis in title if needed */
+}
+
+.ae-title {
+    font-weight: 800;
+    font-size: 16px;
+    line-height: 1.1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* compact reduction badge */
+.ae-chip {
+    font-size: 1.2rem;
+}
+
+.ae-sub {
+    margin-top: 2px;
+    font-size: 12px;
+    opacity: 0.85;
+    /* don’t let it blow up width */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.ae-time {
+    font-size: 1.2rem;
+    text-align: right;
+}
+
+.ae-bar {
+    margin-top: 8px;
+    height: 8px; /* smaller */
+    border-radius: 999px;
+    background: rgba(255,255,255,0.18);
+    overflow: hidden;
+}
+
+.ae-bar-fill {
+    height: 100%;
+    background: rgba(255,255,255,0.75);
+}

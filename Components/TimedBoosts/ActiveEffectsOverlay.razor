@@ -1,0 +1,47 @@
+﻿@inherits FarmComponentBase
+<StopClickPropagation Class="ae-root">
+    @if (_effects.Count == 0)
+    {
+        <div class="ae-empty">
+            <div class="ae-empty-title">No active effects</div>
+            <div class="ae-empty-sub">Activate a timed boost to see it here.</div>
+        </div>
+    }
+    else
+    {
+        <div class="full-scrollable">
+            <WrapLayout RenderList="_effects" ColumnWidth="180px" Context="fx">
+                <div class="ae-card" @onclick="() => GiveDetailsAsync(fx)">
+
+                    <StackLayout>
+                        <StackItem Length="65px" Style="margin-left: 5px; margin-top: 5px;">
+                            <BoostIconComponent Name="@fx.BoostKey"
+                                                ImageSize="60"
+                                                IsAugmented="fx.OutputAugmentationKey is not null"
+                                                IconSize="30"
+                                                ReduceBy="@fx.ReduceBy" />
+                        </StackItem>
+                        <StackItem>
+                            <div class="ae-main">
+                                @if (fx.ReduceBy.HasValue)
+                                {
+                                    <div class="ae-sub" title="Time reduced">
+                                        -@fx.ReduceBy.Value.GetTimeString Reduction
+                                    </div>
+                                }
+                                @if (ShouldShowSubLine(fx))
+                                {
+                                    <div class="ae-sub">@GetDetails(fx)</div>
+                                }
+
+
+                            </div>
+                            <div class="ae-time">@GetTimeLeft(fx)</div>
+
+                        </StackItem>
+                    </StackLayout>
+                </div>
+            </WrapLayout>
+        </div>
+    }
+</StopClickPropagation>

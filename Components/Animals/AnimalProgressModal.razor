@@ -1,0 +1,13 @@
+﻿@inherits TimedOnlyComponent
+@if (_rentalTimeLeft != "")
+{
+    <div>
+        Time Left:  @_rentalTimeLeft
+    </div>
+}
+<div class="text-primary">@ProducingText</div>
+<div>@ReadyText</div>
+
+<ItemRequirementDisplay Name="@Option.Required"
+                        Required="@Option.Input"
+                        Have="@InventoryManager.Get(Option.Required)" />

@@ -1,0 +1,306 @@
+﻿
+@inherits FarmComponentBase
+@if (_loaded == false)
+{
+    return;
+}
+
+@if (string.IsNullOrWhiteSpace(_nextScenarioStatus) == false)
+{
+    <div style="font-size: 3rem;">
+        On Cool Down.   Check Back In @_nextScenarioStatus
+    </div>
+    <PrimaryButton FontSize="3rem" OnClick="Home">
+        Back To Home
+    </PrimaryButton>
+    return;
+}
+@if (_status == EnumScenarioStatus.WaitingToClaim)
+{
+    int coins = ScenarioManager.Reward;
+    <PrimaryButton FontSize="5rem" OnClick="TransferCoinsAsync">
+        Completed Tasks. Transfer Your Reward Of @ScenarioManager.Reward
+    </PrimaryButton>
+    return;
+}
+<CascadingValue IsFixed=true Value="_overlays">
+    <IntegerInputModal Visible="quantityPickerService.Visible"
+        MaxValue="quantityPickerService.MaxValue"
+        StartBlank="true"
+        MaxDigits="3"
+        ValueChanged="OnValueChanged"
+                       VisibleChanged="VisibleChanged">
+        @quantityPickerService.MaxValue
+    </IntegerInputModal>
+
+    <IntegerInputModal Visible="actionPickerService.Visible"
+                       MaxValue="actionPickerService.MaxValue"
+                       MaxDigits="3"
+                       StartBlank="true"
+                       CloseOnSubmit="false"
+                       ValueChanged="OnActionValueChanged"
+                       VisibleChanged="ActionVisibleChanged">
+
+        @if (actionPickerService.SideContent is not null)
+        {
+            @actionPickerService.SideContent
+        }
+    </IntegerInputModal>
+    @if (_showAllWorkshops)
+    {
+        <ConfirmationBlazor Title="Complete All Workshops"
+                            Message="@ShowAllWorkshopsConfirmation"
+                            Results="ProcessAllWorkshops" />
+    }
+    @if (_showAllWorksites)
+    {
+        <ConfirmationBlazor Title="Complete Active Item"
+                            Message="@ShowAllWorksitesConfirmation"
+                            Results="ProcessAllWorksites" />
+    }
+
+    <PopupViewport GapLeftPx="10"
+                   GapRightPx="10"
+                   GapTopPx="10"
+                   GapBottomPx="10"
+                   ShowHeaders="true"
+                   HeaderTitle="Barn"
+                   CloseButtonClick="CloseBarn"
+                   @bind-Visible="_showBarn">
+        <InventoryDisplayComponent InventoryStorageCategory="EnumInventoryStorageCategory.Barn" />
+    </PopupViewport>
+
+    <PopupViewport GapLeftPx="10"
+                   GapRightPx="10"
+                   GapTopPx="10"
+                   GapBottomPx="10"
+                   ShowHeaders="true"
+                   HeaderTitle="Silo"
+                   @bind-Visible="_showSilo">
+        <InventoryDisplayComponent InventoryStorageCategory="EnumInventoryStorageCategory.Silo" />
+    </PopupViewport>
+
+    <PopupViewport
+        ShowHeaders="true"
+        HeaderTitle="Shop"
+        TapToClose="true"
+        @bind-Visible="_showShop"
+    >
+        <ShopComponent />
+    </PopupViewport>
+    <PopupViewport ShowHeaders="true"
+                   HeaderTitle="Speed Seeds"
+                   TapToClose="true"
+                   @bind-Visible="_showSpeedSeeds">
+        <SpeedSeedComponent />
+    </PopupViewport>
+
+    <PopupViewport ShowHeaders="true"
+                   HeaderTitle="Timed Boosts"
+                   TapToClose="true"
+                   @bind-Visible="_showTimedBoosts">
+        <TimedBoostsComponent />
+    </PopupViewport>
+    <PopupViewport ShowHeaders="true"
+                   HeaderTitle="Timed Boosts"
+                   TapToClose="true"
+                   @bind-Visible="_showActiveBoosts">
+        <ActiveEffectsOverlay />
+    </PopupViewport>
+    <PopupViewport ShowHeaders="true"
+                   HeaderTitle="Random Chests"
+                   TapToClose="true"
+                   @bind-Visible="_showRandomChestRewards">
+        <RandomChestRewardComponent />
+    </PopupViewport>
+    <PopupViewport ShowHeaders="true"
+                   HeaderTitle="Achievements"
+                   TapToClose="true"
+                   @bind-Visible="_showAchievements">
+        <AchievementModal />
+    </PopupViewport>
+    <PopupViewport ShowHeaders="true"
+                   HeaderTitle="Advanced Settings"
+                   TapToClose="true"
+                   @bind-Visible="_showAdvancedSettings">
+        <AdvancedSettingsModal />
+    </PopupViewport>
+    <NavigationBarContainer @ref="_nav"
+                            AlwaysShowBar=true
+                            ShowBack="false"
+                            Title="@Title">
+        <IndicatorContent>
+
+            <div class="indicator-row">
+                
+                @if (this.IsBaseline)
+                {
+                    <div class="indicator-left">
+                        <CoinIndicator />
+                    </div>
+                    <div>
+                        <LevelIndicator />
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        Scenario To Earn Coin For Main
+                    </div>
+                }
+                @if (RulesManager.AutomationEnabled == false)
+                {
+                    <div class="indicator-right">
+                        <CompletionBell />
+                    </div>
+                }
+            </div>
+
+        </IndicatorContent>
+        <BarContent>
+            
+            <button class="icon-btn"
+                    title="Close all popups"
+                    aria-label="Close all popups"
+                    @onclick="CloseAllPopupsAsync">
+                <svg viewBox="0 0 24 24" width="40" height="40"
+                     fill="none" stroke="white" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="9" y1="9" x2="15" y2="15" />
+                    <line x1="15" y1="9" x2="9" y2="15" />
+                </svg>
+            </button>
+            
+            <button class="icon-btn"
+                    title="Home"
+                    aria-label="Go to home"
+                    @onclick="Home">
+                <svg viewBox="0 0 24 24" width="40" height="40"
+                     fill="none" stroke="white" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 10.5L12 3l9 7.5" />
+                    <path d="M5 10v9h14v-9" />
+                </svg>
+            </button>
+        </BarContent>
+        <HeaderContent>
+            @if (Key.IsBaseline)
+            {
+                <QuestTrackerComponent />
+            }
+            else
+            {
+               <ScenarioTrackerComponent />
+            }
+        </HeaderContent>
+        <MainContent>
+            @if (Key.IsCoin == false && ProgressionManager.CompletedGame)
+            {
+                <div>
+                    You completed the game
+                </div>
+                <CompletionStatsComponent />
+                return;
+            }
+            <OverlayHost />
+            <div>
+                <ImageButtonComponent Name="Barn" Width="100" OnClick="ShowBarn" />
+                <ImageButtonComponent Name="Silo" Width="100" OnClick="ShowSilo" />
+                @if (Key.IsMain)
+                {
+                    @if (RulesManager.RuleChosen == EnumRuleCategory.Manual)
+                    {
+                        <ImageButtonComponent Name="ConnectingFarms" Width="100" OnClick="Travel" />
+                    }
+                    
+                    <ImageButtonComponent Name="Achievements" Height="100" OnClick="ShowAchievements" />
+                    <ImageButtonComponent Name="AdvancedSettings" Height="100" OnClick="ShowAdvancedSettings" />
+                }
+            </div>
+            
+            <div class="boost-row">
+                @if (this.IsMain)
+                {
+                    <div class="chest-icon-wrap">
+                        <ImageButtonComponent Name="@CurrencyKeys.Chest" Height="100" OnClick="ShowRandomChestRewards" />
+                        @{
+                            int chestCount = InventoryManager.Get(CurrencyKeys.Chest);
+                        }
+                        @if (chestCount > 0)
+                        {
+                            <div class="chest-badge" aria-label="@($"{chestCount} chests")">
+                                @chestCount
+                            </div>
+                        }
+                    </div>
+                }
+                @if (this.IsCooperative == false)
+                {
+                    <ImageButtonComponent OnClick="ShowSpeedSeeds" Name="@CurrencyKeys.SpeedSeed" Height="100" />
+                }
+
+                <!-- existing: activation -->
+                @if (this.IsMain)
+                {
+                    <ImageButtonComponent OnClick="ShowTimedBoosts" Name="TimedBoost" Height="100" />
+
+                    <!-- new: only visible when any boost is active -->
+                    <button class="activefx-btn @(HasAnyActiveTimedBoosts ? "" : "activefx-hidden")"
+                            title="Active timed boosts"
+                            aria-label="Active timed boosts"
+                            @onclick="ShowActiveBoosts">
+                        <svg viewBox="0 0 100 100" width="70" height="70" aria-hidden="true">
+                            <!-- background -->
+                            <rect x="2" y="2" width="96" height="96" rx="16" ry="16"
+                                  fill="#7CFF00" stroke="#222" stroke-width="4" />
+
+                            <!-- active ring -->
+                            <circle cx="50" cy="50" r="40"
+                                    fill="none" stroke="#222" stroke-width="4" />
+
+                            <!-- lightning -->
+                            <path d="M58 10 L28 54 H48 L40 90 L72 44 H52 Z"
+                                  fill="#FFD400" stroke="#222" stroke-width="4"
+                                  stroke-linejoin="round" stroke-linecap="round" />
+
+                            <!-- active dot -->
+                            <circle cx="50" cy="72" r="5"
+                                    fill="#FFD400" stroke="#222" stroke-width="3" />
+                        </svg>
+                        <span class="activefx-badge" aria-hidden="true"></span>
+                    </button>
+                }
+                @if (this.IsCooperative == false)
+                {
+                    <ImageButtonComponent OnClick="PossibleAllWorkshops" Name="@CurrencyKeys.FinishAllWorkshops" Height="100" />
+                    <ImageButtonComponent OnClick="PossibleAllWorksites" Name="@CurrencyKeys.FinishAllWorksites" Height="100" />
+                    <InstantUnlimitedInstancesComponent />
+                }
+            </div>
+            @if (this.IsCooperative)
+            {
+                <div>
+                    <ImageButtonComponent Name="ConnectingFarms" Width="200" OnClick="Return" />
+                </div>
+            }
+            @if (this.IsMain)
+            {
+                <ImageButtonComponent OnClick="ShowShop" Name="CashRegister" Height="100" />
+            }
+            
+            <MainSectionLauncher ReadyCategory="EnumMainSection.Crops" />
+            <MainSectionLauncher ReadyCategory="EnumMainSection.Trees" />
+            <MainSectionLauncher ReadyCategory="EnumMainSection.Animals" />
+            <MainSectionLauncher ReadyCategory="EnumMainSection.Workshops" />
+            <div>
+                <WorksitesComponent />
+            </div>
+            
+
+            
+
+
+        </MainContent>
+    </NavigationBarContainer>
+</CascadingValue>

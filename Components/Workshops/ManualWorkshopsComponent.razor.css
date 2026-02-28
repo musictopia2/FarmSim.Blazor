@@ -1,0 +1,33 @@
+﻿.workshop-tile {
+    width: 95px;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+::deep .workshop-img {
+    width: 95px;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.workshop-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    min-width: 30px;
+    height: 30px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 2px solid white;
+    background: #d33; /* you can change */
+    color: white;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1;
+}

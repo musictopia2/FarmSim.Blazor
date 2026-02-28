@@ -1,0 +1,13 @@
+﻿@inherits InventoryAwareComponentBase
+<StopClickPropagation>
+    <div class="coin-wrap" title="Coins" @onclick="AttemptEarnCoin">
+        <ResolvedImage 
+            class="coin-img"
+            Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Coin"
+            Alt="Coin"
+            />
+        <span class="coin-text">@CoinCountDisplay</span>
+    </div>
+
+</StopClickPropagation>
+

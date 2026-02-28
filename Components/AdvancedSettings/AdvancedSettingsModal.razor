@@ -1,0 +1,155 @@
+﻿@inherits FarmComponentBase
+<TabButtonContainer>
+    <TabPage Text="Crafting">
+        <StopClickPropagation Class="adv-settings-group">
+
+
+            <AdvancedSettingToggleCard Title="Auto-craft multiple items"
+                                       Description="Adds a button on recipes to craft as many as possible at once."
+                                       @bind-Value="@Settings.Crafting.EnableBulkCraftButton"
+                                       OnToggled="SaveAsync"
+                                       ShowInfo="true" />
+
+            <AdvancedSettingToggleCard Title="Auto-use finish items"
+                                       Description="When using Finish Workshop or Power Gloves, automatically uses what's needed."
+                                       @bind-Value="Settings.Crafting.AutoUseFinishResources"
+                                       ShowInfo="true"
+                                       OnToggled="SaveAsync" />
+            <WorkshopCollectionPolicySelector @bind-Value="Settings.Crafting.WorkshopCollectionPolicy"
+                                              OnSelected="WorkshopPolicyChanged" />
+        </StopClickPropagation>
+    </TabPage>
+    <TabPage Text="Animals">
+        <StopClickPropagation Class="adv-settings-group">
+            <AnimalCollectionModeSelector @bind-Value="Settings.AnimalCollectionPolicy"
+                                          OnSelected="SaveAsync" />
+            <AnimalDefaultOptionModeSelector @bind-Value="Settings.AnimalDefaultMode" 
+                OnSelected="SaveAsync"
+            />
+        </StopClickPropagation>
+
+    </TabPage>
+    <TabPage Text="Trees, & Crops">
+        <StopClickPropagation Class="adv-settings-group">
+            <AdvancedSettingToggleCard Title="Tree Collection Policy"
+                                       Description="Collects From All Available Fruit At The Same Time"
+                                       @bind-Value="@Settings.CollectAllAvailableFromTrees"
+                                       OnToggled="SaveAsync"
+                                       ShowInfo="true" />
+            <AdvancedSettingToggleCard Title="Automate Crops"
+                                       Description="Automatically collects from crops when completed"
+                                       @bind-Value="@Settings.AutomateCropCollection"
+                                       OnToggled="SaveAsync"
+                                       ShowInfo="true" />
+            
+        </StopClickPropagation>
+        
+    </TabPage>
+    @if (RulesManager.AutomationEnabled == false)
+    {
+        <TabPage Text="Workers">
+            <StopClickPropagation Class="adv-settings-group">
+                <div class="adv-settings-group-title">Worksite worker preferences</div>
+
+                @if (string.IsNullOrWhiteSpace(_selectedSite))
+                {
+                    <!-- Screen A: choose a worksite -->
+                    <div class="adv-settings-muted">Choose a worksite to configure:</div>
+
+                    <div class="site-grid">
+                        @foreach (var site in WorksiteManager.GetUnlockedWorksites())
+                        {
+                            <button type="button" class="site-btn"
+                                    @onclick="() => SelectSite(site)">
+                                <div class="site-btn-title">@site.GetWords</div>
+                                <div class="site-btn-sub">@GetPreferredCount(site) preferred</div>
+                            </button>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <!-- Screen B: edit one worksite -->
+                    <div class="site-header">
+                        <button type="button" class="back-btn" @onclick="BackToList">← Back</button>
+                    </div>
+                    <StackLayout>
+                        <StackItem>
+                            <BackgroundImageContainer Class="main-choose-workers"
+                                                      Name="@_selectedSite">
+                                <StackLayout>
+
+                                    <StackItem StopClickPropagation>
+                                        <div style="height: 80px; visibility:@(CanGoUp ? "visible" : "hidden");">
+                                            <ArrowUpComponent TargetHeight="100%" Clicked="GoUp" />
+                                        </div>
+                                        <div style="height: 80px; margin-top: 5px; visibility:@(CanGoDown ? "visible" : "hidden");">
+                                            <ArrowDownComponent TargetHeight="100%"
+                                                                Clicked="GoDown" />
+                                        </div>
+                                        <div>
+                                            <PrimaryButton OnClick="ClearAllAsync">
+                                                Clear All
+                                            </PrimaryButton>
+                                        </div>
+                                    </StackItem>
+                                    <StackItem>
+                                        <ImageButtonComponent Height="100" Name="@_currentWorker!.WorkerName" OnClick="ProcessWorkerAsync" />
+                                        <div class="main-worker-details">@_currentWorker?.Details</div>
+                                    </StackItem>
+                                </StackLayout>
+                            </BackgroundImageContainer>
+
+                        </StackItem>
+                        <StackItem>
+                            <WrapLayout RenderList="_preferredList" ColumnWidth="300px" Context="name">
+                                <div>
+                                    <BoostIconComponent ImageSize="100" Name="@name" />
+                                </div>
+                                <div>
+                                    @GetDetails(name)
+                                </div>
+                            </WrapLayout>
+                        </StackItem>
+                    </StackLayout>
+
+
+
+                }
+            </StopClickPropagation>
+        </TabPage>
+    }
+    <TabPage Text="Misc">
+        <StopClickPropagation Class="adv-settings-group">
+
+
+            <AdvancedSettingToggleCard Title="Use Confirmations"
+                                       Description="If false, then will not receive confirmations before performing actions."
+                                       @bind-Value="@Settings.UseConfirmations"
+                                       OnToggled="SaveAsync"
+                                       ShowInfo="true" />
+
+            <AdvancedSettingToggleCard Title="Use Boost Immediately Upon Purchase"
+                                       Description="If turned on, then after purchasing boost, will enable immediately if none is in use."
+                                       @bind-Value="Settings.UseBoostImmediatelyUponPurchase"
+                                       ShowInfo="true"
+                                       OnToggled="SaveAsync" />
+            @if (RulesManager.AutomationEnabled == false)
+            {
+            <AdvancedSettingToggleCard Title="Automate Worksite Collection"
+                                       Description="If turned on, then when a worksite is completed, will collect automatically."
+                                       @bind-Value="Settings.AutomateWorksiteCollection"
+                                       ShowInfo="true"
+                                       OnToggled="SaveAsync" />
+            }
+        </StopClickPropagation>
+    </TabPage>
+    
+</TabButtonContainer>
+
+@if (_saved)
+{
+    <div class="adv-settings-footer">
+        <div class="adv-settings-saved">✓ Changes saved automatically on @_lastdate</div>
+    </div>
+}

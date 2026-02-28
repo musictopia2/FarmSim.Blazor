@@ -1,0 +1,77 @@
+﻿@inherits FarmComponentBase
+@if (_details.CostAmount == 0)
+{
+    return;
+}
+
+<PrimaryButton OnClick="OpenUpgrades">
+    Open Upgrade Reduced Time
+</PrimaryButton>
+
+
+<PopupViewport ShowHeaders="false"
+    @bind-Visible="_opened"
+    TapToClose="true"
+>
+    @Target.GetWords Level @_details.Level
+    @if (_fullyUpgraded)
+    {
+        <div>
+            Fully upgraded
+        </div>
+        return;
+    }
+    <TabButtonContainer ActiveKey="@ActiveKey">
+        <ObjectRepeater RenderList="_tabs" Context="lvl">
+            <TabPage Key="@lvl.ToString()">
+                <HeaderTemplate>
+                    <span class="@(lvl <= _details.Level ? "au-owned" : "")">Lv @lvl</span>
+                </HeaderTemplate>
+
+                <ChildContent>
+                    <div class="au-rt-body">
+                        <div class="au-rt-benefit">
+                            Benefit: @_details.ReducedTimes[lvl - 1]%
+                        </div>
+
+                        @if (lvl <= _details.Level)
+                        {
+                            <div class="au-owned-text">Already purchased</div>
+                        }
+                        else if (lvl == _details.Level + 1)
+                        {
+                            @if (_details.CostAmount == 0)
+                            {
+                                <div class="au-owned-text">Fully upgraded</div>
+                            }
+                            else
+                            {
+                                <div class="au-cost-row">
+                                    <div class="au-cost-icon">
+                                        <BoostIconComponent ImageSize="60" Name="@_details.Currency" />
+                                    </div>
+
+                                    <div class="au-cost-amount">
+                                        @_details.CostAmount.ToString("N0")
+                                    </div>
+
+                                    
+                                </div>
+                                <div>
+                                    <SuccessButton FontSize="2rem" OnClick="PurchaseAsync">
+                                        Upgrade to Lv @lvl
+                                    </SuccessButton>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="au-locked">Purchase previous level first</div>
+                        }
+                    </div>
+                </ChildContent>
+            </TabPage>
+        </ObjectRepeater>
+    </TabButtonContainer>
+</PopupViewport>
+

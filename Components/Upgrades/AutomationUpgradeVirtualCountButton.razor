@@ -1,0 +1,42 @@
+﻿@inherits FarmComponentBase
+@if (_details.CostAmount == 0)
+{
+    return;
+}
+<PrimaryButton OnClick="OpenUpgrades">
+    Open Upgrade Virtual Count
+</PrimaryButton>
+<PopupViewport ShowHeaders="false"
+               @bind-Visible="_opened"
+               TapToClose="true">
+    @Target.GetWords
+    @if (_fullyUpgraded)
+    {
+        <div>
+            Fully Upgraded
+        </div>
+        return;
+    }
+    <div>
+        Current Virtual Value: @PreviousVirtualCount
+    </div>
+    <div>
+        Upgraded Increases Value To At Least: @ProposedNewAmount Which Increases By @_details.NextBenefit!.Value for each instance
+    </div>
+    <div class="au-cost-row">
+        <div class="au-cost-icon">
+            <BoostIconComponent ImageSize="60" Name="@_details.Currency" />
+        </div>
+
+        <div class="au-cost-amount">
+            @_details.CostAmount.ToString("N0")
+        </div>
+
+
+    </div>
+    <div>
+        <SuccessButton FontSize="2rem" OnClick="PurchaseAsync">
+            Upgrade Que
+        </SuccessButton>
+    </div>
+</PopupViewport>

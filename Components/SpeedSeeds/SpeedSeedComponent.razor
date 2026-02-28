@@ -1,0 +1,54 @@
+﻿@inherits InventoryAwareComponentBase
+<PopupViewport ShowHeaders="true"
+               HeaderTitle="Animal Speed Seeds"
+               TapToClose="true"
+               @bind-Visible="_showAnimals">
+    <AnimalSpeedComponent />
+</PopupViewport>
+
+<div class="ss-topbar">
+
+    <StackLayout>
+        <StackItem>
+            <ImageButtonComponent Name="@CurrencyKeys.SpeedSeed" Height="50" />
+        </StackItem>
+        <StackItem Length="8ch">
+            <span class="ss-seed-count">@InventoryManager.Get(CurrencyKeys.SpeedSeed)</span>
+        </StackItem>
+        <StackItem>
+            <PrimaryButton OnClick="ShowAnimals">
+                Show Animals
+            </PrimaryButton>
+        </StackItem>
+    </StackLayout>
+
+    
+</div>
+<div class="ss-scroll">
+    <StopClickPropagation>
+        <WrapLayout RenderList="_list" ColumnWidth="100px" Context="item">
+            <div class="ss-card">
+                <div class="ss-head">
+                    <ImageButtonComponent Name="@item.Item" Height="28" />
+                    <div class="ss-title">@item.Item.GetWords</div>
+                </div>
+
+                <div class="ss-meta">
+                    <div class="ss-pill">@DisplayAmount(item)</div>
+
+                    <div class="ss-ownedrow">
+                        <ResolvedImage 
+                            Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Barn"
+                            height="18"
+                            />
+                        <span class="ss-owned">@InventoryManager.Get(item.Item)</span>
+                    </div>
+                </div>
+
+                <button class="ss-use" @onclick="() => TryToUse(item)">
+                    Use 1
+                </button>
+            </div>
+        </WrapLayout>
+    </StopClickPropagation>
+</div>

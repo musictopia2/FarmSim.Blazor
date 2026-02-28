@@ -1,0 +1,82 @@
+﻿.track-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 2px solid #666;
+    background: white;
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 1;
+}
+
+    .track-btn.tracked {
+        background: #ffe08a;
+    }
+
+.quest-chip {
+    border: 2px solid #666;
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-weight: 900;
+}
+.quest-book-root {
+    min-width: 360px;
+}
+
+/* 5 items per row on desktop */
+.quest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+    user-select: none;
+}
+
+/* Make cards equal height */
+.quest-grid-item {
+    display: flex;
+}
+
+    .quest-grid-item .card {
+        width: 100%;
+    }
+.quest-name {
+    white-space: normal; /* allow wrapping */
+    overflow-wrap: anywhere; /* break long words if needed */
+    line-height: 1.15;
+    max-height: 2.3em; /* ~2 lines */
+}
+/* Visual state: quest exists, but is not completable until player reaches LevelRequired */
+.quest-card-shell {
+    position: relative;
+}
+
+    .quest-card-shell.level-locked {
+        opacity: 0.80;
+        filter: grayscale(0.35);
+    }
+
+.quest-level-badge {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border: 2px solid #666;
+    border-radius: 999px;
+    background: white;
+    font-weight: 900;
+    font-size: 0.85rem;
+    line-height: 1;
+    pointer-events: none; /* don't block clicks on the card */
+}
+
+.quest-level-badge-lock {
+    font-size: 0.95rem;
+}
+.quest-card-shell.new-quest {
+    outline: 4px solid aqua;
+    outline-offset: -2px;
+    background: rgba(0, 255, 255, 0.10);
+}

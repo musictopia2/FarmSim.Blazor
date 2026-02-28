@@ -1,0 +1,7 @@
+﻿@inherits FarmComponentBase
+@if (RulesManager.AutomationEnabled)
+{
+    <AutomationWorksitesComponent />
+    return;
+}
+<ManualWorksitesComponent />

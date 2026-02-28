@@ -1,0 +1,305 @@
+@inherits TimedOnlyComponent
+
+<PopupViewport ZIndex="2000"
+               ShowHeaders="false"
+               @bind-Visible="_showPowerGloves">
+    <PowerGloveWorksiteComponent Location="@Location"
+                                 OnClose="ClosePowerGloves" />
+</PopupViewport>
+@if (_showCompleteConfirmation)
+{
+    <ConfirmationBlazor Title="Complete Active Item"
+                        Message="@GetCompleteConfirmationMessage"
+                        Results="ConfirmCompleteWorksite" />
+}
+
+<PopupViewport ZIndex="2500"
+              ShowHeaders="false"
+              TapToClose="true"
+              @bind-Visible="_showWorkerPicker">
+              <StopClickPropagation>
+                <div style="
+                    width: 92vw;
+                    display:flex;
+                    flex-direction:column;
+                    overflow:hidden;
+                    padding:.75rem;
+                    box-sizing:border-box;
+                    background: rgba(255,255,255,.92);
+                    border-radius: 14px;"
+                             @onclick:stopPropagation>
+
+                    <div style="flex:0 0 auto;">
+                        <StackLayout ItemSpacing="30px">
+                            <StackItem>
+                                <div style="font-size:1.6rem; font-weight:800;">Choose Workers</div>
+                            </StackItem>
+                            <StackItem>
+                                <div style="font-size:1.6rem; font-weight:800;">
+                                    Chosen @WorkersSelected
+                                </div>
+                                
+                            </StackItem>
+                            @{
+
+                                BasicList<WorksiteRewardPreview> firsts = WorksiteAutomationManager.GetPreview(Location, EnumWorksitePreviewMode.PlannedUnlockedWorkers);
+                            }
+                            <ObjectRepeater RenderList="firsts" Context="preview">
+                                <StackItem>
+                                    <ChanceRing PercentChance="@preview.Chance"
+                                                FillColor="@cc1.SaddleBrown.ToWebColor"
+                                                Size="90px"
+                                                StrokeWidth="10px">
+                                        <div class="reward-ring-content">
+                                            <ResolvedImage class="reward-ring-img"
+                                                           Name="@preview.Item"
+                                                           Alt="@preview.Item" />
+
+                                            <div class="reward-ring-amount">@preview.Amount</div>
+                                        </div>
+                                    </ChanceRing>
+
+                                </StackItem>
+
+                            </ObjectRepeater>
+                            
+                            
+                        </StackLayout>
+                        
+                        <div style="opacity:.85; margin-top:.25rem;">
+                            Changes apply to the <b>next</b> run.
+                        </div>
+                        
+                        <div style="height:1px; background:rgba(0,0,0,.15); margin:.75rem 0;"></div>
+                    </div>
+
+                    <!-- ✅ THIS MUST BE VISIBLE OR NOTHING WORKS -->
+                    <div style="
+                        flex:1 1 auto;
+                        height: 30vh;
+                        overflow:auto;
+                        -webkit-overflow-scrolling:touch;
+                        padding:.25rem;">
+                        <WrapLayout RenderList="_available" ColumnWidth="240px" Context="worker">
+                            @{
+                                bool selected = _pending.Any(x => x.WorkerName.Equals(worker.WorkerName, StringComparison.OrdinalIgnoreCase));
+                                string elsewhere = GetElsewhereText(worker);
+                            }
+                            <button type="button"
+                                    @onclick="() => ToggleWorker(worker)"
+                                    style="
+                                                display:flex;
+                                                gap:.6rem;
+                                                align-items:flex-start;
+                                                padding:.6rem;
+                                                border-radius:14px;
+                                                border:0;
+                                                background: rgba(255,255,255,.88);
+                                                box-shadow: inset 0 0 0 3px @(selected ? "rgba(47,168,79,.35)" : "transparent");
+                                                text-align:left;">
+                                
+                                <ResolvedImage Name="@worker.WorkerName" style="width:76px; height:76px; border-radius:14px;" Alt="@worker.WorkerName" />
+                                <div style="flex:1; min-width:0;">
+                                    <div style="font-weight:900;">@worker.WorkerName.GetWords</div>
+
+                                    <div style="opacity:.85; font-size:.9rem;">
+                                        @(string.IsNullOrWhiteSpace(worker.Details) ? " " : worker.Details)
+                                    </div>
+
+                                    @if (string.IsNullOrWhiteSpace(elsewhere) == false)
+                                    {
+                                        <div style="margin-top:.25rem; font-size:.85rem; opacity:.85;">
+                                            @elsewhere
+                                        </div>
+                                    }
+                                </div>
+                            </button>
+
+                        </WrapLayout>
+                        
+                    </div>
+
+                    <div style="flex:0 0 auto; margin-top:.75rem; display:flex; gap:.75rem;">
+                        <PrimaryButton FontSize="1.2rem" OnClick="CloseWorkerPicker">Done</PrimaryButton>
+                    </div>
+                </div>
+              </StopClickPropagation>
+              
+
+    
+</PopupViewport>
+
+
+<PopupViewport ZIndex="2500"
+              ShowHeaders="false"
+              TapToClose="true"
+              @bind-Visible="_showRequestPicker">
+    <AmountPickerComponent ActionVerb="@_requestVerb"
+                          Limit="_requestLimit"
+                          OnCancel="CloseRequestPicker"
+                          OnSubmit="RequestRunsAsync" />
+</PopupViewport>
+
+
+@if (string.IsNullOrWhiteSpace(Location))
+{
+    return;
+}
+<StackLayout>
+    <StackItem>
+        <div class="busy-wrap" style="height: @_height;">
+            <BackgroundImageContainer class="busy" Name="@Location">
+                <div class="busy-hero-top">
+                    @Location.GetWords
+                </div>
+
+                <div class="busy-hero-pill">
+                    <span class="busy-hero-text">
+                        @GetHeadline
+                    </span>
+
+                    
+                </div>
+
+
+
+                <div class="busy-workers-wrap" style="margin-top: 1rem;">
+                    @foreach (var w in _active)
+                    {
+                        <div class="busy-worker-tile">
+                            <ResolvedImage class="busy-worker-img" Name="@w.WorkerName" Alt="@w.WorkerName" />
+                        </div>
+                    }
+                    @if (_active.Count == 0)
+                    {
+                        <div style="opacity:.7; padding-left: 1rem;">No active workers</div>
+                    }
+                </div>
+
+                @{
+                    // replace these with your actual state flags / properties you already compute
+                    //bool isRunning = _status?.IsInProgress == true
+                    //|| (_timeUntilNextReady is not null && _outstanding > 0); // fallback idea
+
+                    bool isRunning = WorksiteAutomationManager.IsRunning(Location);
+
+
+                    var mode = isRunning
+                    ? EnumWorksitePreviewMode.UIWorkersActive
+                    : EnumWorksitePreviewMode.PlannedUnlockedWorkers;
+
+                    BasicList<WorksiteRewardPreview> preview = WorksiteAutomationManager.GetPreview(Location, mode);
+
+                    // Optional: if no pending selected, fall back to a "default" preview (base/no workers)
+                    if (!isRunning && (preview?.Count ?? 0) == 0)
+                    {
+                        preview = WorksiteAutomationManager.GetPreview(Location, EnumWorksitePreviewMode.UIWorkersActive);
+                    }
+                }
+
+                <div class="processing-rewards">
+                    @foreach (var r in preview!)
+                    {
+                        <div class="processing-reward-tile">
+                            <ChanceRing PercentChance="@r.Chance"
+                                        FillColor="@cc1.SaddleBrown.ToWebColor"
+                                        Size="@_ringSize"
+                                        StrokeWidth="10px">
+                                <div class="reward-ring-content">
+                                    <ResolvedImage class="reward-ring-img"
+                                                   Name="@r.Item"
+                                                   Alt="@r.Item" />
+
+                                    <div class="reward-ring-amount">@r.Amount</div>
+                                </div>
+                            </ChanceRing>
+
+                        </div>
+                    }
+                </div>
+                
+                <div class="worksite-status-bottom">
+                    <div class="status-item"><b>Queued:</b> @_outstanding / @_cap</div>
+                    <div class="status-item"><b>Remaining:</b> @_remaining</div>
+
+                    @if (_timeUntil is not null)
+                    {
+                        <div class="status-item"><b>Next ready:</b> @_timeText</div>
+                    }
+                    else if (_outstanding > 0)
+                    {
+                        <div class="status-item muted"><b>Status:</b> Waiting</div>
+                    }
+                    else
+                    {
+                        <div class="status-item muted"><b>Status:</b> Idle</div>
+                    }
+                </div>
+            </BackgroundImageContainer>
+        </div>
+
+    </StackItem>
+    <StackItem>
+        <div>
+            <StopClickPropagation>
+                <ArrowLeftComponent TargetHeight="10vh" Clicked="PreviousClicked" />
+                <ArrowRightComponent TargetHeight="10vh" Clicked="NextClicked" />
+                <AutomationUpgradeQueButton Target="@Location" PreviousQueCount="@_cap" />
+            </StopClickPropagation>
+            
+        </div>
+        <div>
+            <StackLayout>
+                <StackItem>
+                    @if (SuppliesNeeded.Count > 0)
+                    {
+                        <div>
+                            Supplies Needed:
+                        </div>
+                        @foreach (var item in SuppliesNeeded)
+                        {
+                            <ItemRequirementDisplay Variant="EnumRequirementVariant.Row"
+                                                    Name="@item.Item"
+                                                    OnClicked="AttemptWorkshopAsync"
+                                                    Required="item.Amount"
+                                                    Have="InventoryManager.Get(item.Item)" />
+                        }
+                    }
+                    else
+                    {
+                        <BoostIconComponent Name="@BoostKeys.WorksiteNoSupplies" ImageSize="200" />
+                    }
+                </StackItem>
+                <StackItem>
+                    @if (WorksiteAutomationManager.IsRunning(Location))
+                    {
+                        <ImageButtonComponent Name="@CurrencyKeys.PowerGloveWorksite"
+                                              OnClick="OnPowerGloveClicked"
+                                              Height="80" />
+                        <ImageButtonComponent Name="@CurrencyKeys.FinishSingleWorksite"
+                                              OnClick="OnFinishSingleClicked"
+                                              Height="80" />
+
+                    }
+                </StackItem>
+            </StackLayout>
+            
+            
+        </div>
+        <StopClickPropagation>
+            <div>
+                <PrimaryButton FontSize="2.5rem" OnClick="OpenWorkerPicker">
+                    Workers
+                </PrimaryButton>
+                <PrimaryButton FontSize="2.5rem" IsEnabled="_canOpenRequest" OnClick="OpenRequestPicker">
+                    @_requestButtonText
+                </PrimaryButton>
+            </div>
+            <div style="font-size: 2.5rem;">
+                @WorksiteAutomationManager.GetDuration(Location)
+            </div>
+            
+        </StopClickPropagation>
+
+    </StackItem>
+</StackLayout>

@@ -1,0 +1,18 @@
+﻿@inherits FarmComponentBase
+@if (_crop is not null)
+{
+    <AutomationCropComponent  Crop="@_crop"
+        NextClicked="Next"
+        PreviousClicked="Previous"
+        />
+    return;
+}
+<div class="full-scrollable">
+    <WrapLayout ColumnWidth="200px" RenderList="_crops" Context="crop">
+        <ImageButtonComponent 
+            OnClick="() => OnCLick(crop)"
+            Name="@crop.CropName"
+            Height="200"
+            />
+    </WrapLayout>
+</div>

@@ -1,0 +1,77 @@
+.boost-icon-wrap {
+    position: relative;
+    display: inline-block; /* prevents weird layout stretching */
+    line-height: 0; /* removes inline gaps */
+}
+
+.full-scrollable {
+    height: 45vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Base image sits at z=1 */
+.boost-icon-base {
+    display: block;
+    position: relative;
+}
+
+/* Badge sits on top at z=2 */
+.boost-icon-badge {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    display: block; /* SVG sometimes behaves inline */
+    pointer-events: none; /* avoids intercepting clicks */
+}
+
+.rental-timer {
+    position: absolute;
+    background: rgba(0,0,0,0.82);
+    color: #fff;
+    padding: 1px 5px;
+    border-radius: 10px;
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 1;
+    /* Prevent shifting as digits change */
+    width: 110px; /* pick a width that fits your longest string */
+    text-align: center;
+    white-space: nowrap;
+    /* Make digits equal-width even if font isn't */
+    font-variant-numeric: tabular-nums;
+    z-index: 20;
+    pointer-events: none; /* allow clicking the tree through the overlay */
+}
+
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* kill scrollbars */
+}
+
+body {
+    position: fixed; /* prevents “rubber band” / overscroll creating scroll */
+    inset: 0;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+}
+
+/* Good global hygiene */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* If Blazor template wraps content in main */
+main {
+    height: 100%;
+    overflow: hidden;
+}
+.busy-worker-img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+}

@@ -1,0 +1,135 @@
+﻿@inherits FarmComponentBase
+
+<div class="p-2" style="min-width: 320px;">
+    @if (_rentalTimeLeft != "")
+    {
+        <div>
+            Time Left:  @_rentalTimeLeft
+        </div>
+    }
+    <div class="fw-bold mb-2">Choose production</div>
+
+    <SimpleRepeater HowMany="_productionOptions.Count" Context="i">
+        @{
+            var option = _productionOptions[i - 1];
+
+            bool canStart = AnimalManager.CanProduce(Animal, i - 1);
+
+            int needReq = option.Input;
+
+            int haveOut = Have(option.Required);
+        }
+        
+
+        <div class="card p-2 mb-2 @(canStart ? "" : "opacity-50")">
+            <div class="d-flex align-items-center justify-content-between gap-3">
+
+                <!-- Requires -->
+                @if (Animal.MaxBenefits == false)
+                {
+                    <div class="d-flex flex-column">
+
+                        <ItemRequirementDisplay Name="@option.Required"
+                                                OnClicked="ClickedCropAsync"
+                                                Required="@needReq"
+                                                Have="@haveOut"
+                                                WidthPx="150" />
+
+
+
+                    </div>
+                }
+                
+
+                <!-- Produces -->
+                <div class="d-flex flex-column align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="fw-bold">Produces @option.Output.Amount</div>
+                        <ResolvedImage 
+                            Name="@option.Output.Item"
+                            Alt="@option.Output.Item"
+                                       style="width: 48px; height: 48px; object-fit: contain;"
+                                       />
+                        
+                    </div>
+
+                    <div class="fw-bold text-muted" style="font-size: 1rem; line-height: 1.1;">
+                        @GetDurationText(option)
+                    </div>
+
+                    <div class="barn-amount text-muted">
+                        <ResolvedImage 
+                            Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Barn"
+                            height="30"
+                            Alt="Barn"
+                            />
+                        <span>@Have(option.Output.Item)</span>
+                    </div>
+                </div>
+
+                <PrimaryButton IsEnabled="canStart"
+                               OnClick="() => OptionSelected(option)">
+                    Feed
+                </PrimaryButton>
+            </div>
+        </div>
+    </SimpleRepeater>
+
+    @if (_nextOption is not null)
+    {
+        var option = _nextOption.Option;
+
+        int needReq = option.Input;
+        int haveOut = Have(option.Required);
+
+    <div class="card p-2 mb-2 opacity-50">
+        <div class="d-flex align-items-center justify-content-between gap-3">
+
+            <!-- Requires (same as unlocked) -->
+            <div class="d-flex flex-column">
+                <ItemRequirementDisplay Name="@option.Required"
+                                        Required="@needReq"
+                                        Have="@haveOut"
+                                        WidthPx="150" />
+            </div>
+
+            <!-- Produces (same structure, but lock overlay + level text) -->
+            <div class="d-flex flex-column align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="fw-bold">Produces @option.Output.Amount</div>
+
+                    <div style="position: relative; width: 48px; height: 48px;">
+                        <ResolvedImage 
+                            Name="@option.Output.Item"
+                            Alt="@option.Output.Item"
+                            style="width: 48px; height: 48px; object-fit: contain;"
+                            />
+                        <ResolvedImage 
+                            Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Padlock"
+                            Alt="Locked"
+                                           style="position: absolute; left: 2px; bottom: 2px; width: 18px; height: 18px; object-fit: contain; pointer-events: none;"                />
+
+                        
+                    </div>
+                </div>
+
+                <div class="fw-bold text-muted" style="font-size: 1rem; line-height: 1.1;">
+                    Level @_nextOption.Level
+                </div>
+
+                <div class="barn-amount text-muted">
+                        <ResolvedImage Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Barn"
+                                       height="30"
+                                       Alt="Barn" />
+                    <span>@Have(option.Output.Item)</span>
+                </div>
+            </div>
+
+            <!-- Button column (keep spacing consistent) -->
+            <PrimaryButton IsEnabled="false">
+                Start
+            </PrimaryButton>
+        </div>
+    </div>
+}
+</div>

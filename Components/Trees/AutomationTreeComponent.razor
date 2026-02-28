@@ -1,0 +1,75 @@
+﻿@inherits TimedOnlyComponent
+
+<PopupViewport @bind-Visible="_showPicker"
+               TapToClose="true"
+               ShowHeaders="false">
+
+    <AmountPickerComponent ActionVerb="@_pickerVerb"
+                           Limit="_pickerLimit"
+                           OnSubmit="SubmitPickerAsync"
+                           OnCancel="ClosePicker" />
+</PopupViewport>
+<StackLayout ItemSpacing="30px">
+    <StackItem>
+        <InventoryAmountIndicator Style="display:block;"
+                                  FontSize="2.5rem"
+                                  Height="60"
+                                  ItemName="@Tree.ItemName"
+                                  IconName="@Tree.ItemName" />
+    </StackItem>
+    <StackItem>
+        <div style="font-size: 2.5rem">
+            @TreeAutomationManager.GetDuration(Tree)
+        </div>
+    </StackItem>
+</StackLayout>
+<div>
+    <ArrowLeftComponent TargetHeight="10vh" Clicked="PreviousClicked" />
+    <ArrowRightComponent TargetHeight="10vh" Clicked="NextClicked" />
+    <AutomationUpgradeReducedTimeButton Target="@Tree.ItemName" />
+    <AutomationUpgradeQueButton Target="@Tree.ItemName" PreviousQueCount="@_cap" />
+    <AutomationUpgradeVirtualCountButton Target="@Tree.ItemName" PreviousVirtualCount="@_virtualCount" />
+</div>
+@if (_blocked)
+{
+    <div style="font-size: 2.5rem;">
+        Blocked: inventory is full (free space to continue)
+    </div>
+}
+else if (_outstanding <= 0)
+{
+    <div style="font-size: 2.5rem;">
+        No request active. Choose how many to request (max @(_cap)).
+    </div>
+}
+else
+{
+    <div style="font-size: 2.5rem;">
+        Requested queue: @_outstanding / @_cap (Remaining capacity: @_remaining)
+    </div>
+
+    <div style="font-size: 2.5rem;">
+        Next ready: @_nextReadyDisplay
+    </div>
+}
+
+<div style="margin-top: 1rem;">
+    @if (_outstanding <= 0)
+    {
+        <PrimaryButton FontSize="3rem" OnClick="OpenRequestPicker">
+            Request
+        </PrimaryButton>
+    }
+    else if (_remaining > 0)
+    {
+        <PrimaryButton FontSize="3rem" OnClick="OpenAddPicker">
+            Add More
+        </PrimaryButton>
+    }
+    else
+    {
+        <div style="font-size: 2rem;">
+            <span>At capacity.</span>
+        </div>
+    }
+</div>

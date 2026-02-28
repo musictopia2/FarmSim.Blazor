@@ -1,0 +1,87 @@
+﻿.adv-settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+    max-width: 720px;
+}
+
+.adv-settings-group-title {
+    font-weight: 900;
+    opacity: 0.8;
+    margin: 10px 0 2px;
+}
+
+.adv-settings-footer {
+    position: sticky;
+    bottom: 0;
+    margin-top: 16px;
+    padding: 10px 0;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(6px);
+}
+
+.adv-settings-saved {
+    font-weight: 800;
+    opacity: 0.8;
+}
+
+.site-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.site-btn {
+    text-align: left;
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(0,0,0,0.10);
+    min-height: 70px;
+}
+
+.site-btn-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.site-btn-sub {
+    opacity: 0.75;
+    margin-top: 4px;
+}
+
+.site-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.back-btn {
+    min-height: 44px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(0,0,0,0.10);
+}
+
+.site-header-title {
+    font-weight: 800;
+    font-size: 1.15rem;
+}
+::deep .main-choose-workers {
+    height: 35vh;
+    aspect-ratio: 1 / 1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.main-worker-details{
+    word-wrap:break-word;
+    background-color: black;
+    color: white;
+    width: 250px;
+}

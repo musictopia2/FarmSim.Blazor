@@ -1,0 +1,100 @@
+﻿/* Base */
+.ird-root {
+    box-sizing: border-box;
+    user-select: none;
+}
+/* Border wrapper */
+.ird-bordered {
+    border: 2px solid #666;
+    border-radius: 10px;
+    background: white;
+    padding: 2px;
+}
+
+/* Borderless variant */
+.ird-borderless {
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+/* ROW variant (Workshop style) */
+.ird-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    
+    width: 300px; /* optional; parent can override */
+}
+
+::deep .ird-img-lg {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    display: block;
+}
+
+::deep .ird-img-sm {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+
+.ird-text {
+    min-width: 0;
+}
+
+.ird-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    /* allow wrapping */
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.ird-amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* TILE variant (Worksite style) */
+.ird-tile {
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* extra safety: keep contents centered even if parent/grid is weird */
+    justify-content: flex-start;
+    text-align: center;
+}
+
+
+
+.ird-tile .ird-amount {
+    font-size: 1.25rem;
+    margin-top: 4px;
+    text-align: center;
+    width: 100%; /* IMPORTANT: lets centering behave predictably */
+    line-height: 1.1; /* optional, closer to your old look */
+}
+
+
+
+
+.ird-ok {
+    color: #2fa84f; /* existing green */
+}
+
+.ird-bad {
+    color: #d64545; /* existing red */
+}
+
+/* Brighter for dark backgrounds */
+.black-ok {
+    color: #00FF00;
+}
+
+.black-bad {
+    color: #FF3B3B; /* bright vivid red */
+}

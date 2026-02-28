@@ -1,0 +1,61 @@
+.adv-choice-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 720px;
+}
+
+.adv-choice-title {
+    font-weight: 900;
+    margin-top: 10px;
+}
+
+.adv-choice-desc {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.adv-choice-card {
+    width: 100%;
+    min-height: 64px;
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.15);
+    display: flex;
+    gap: 12px;
+    text-align: left;
+    background: rgba(245,235,215,0.95);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    cursor: pointer;
+}
+
+    .adv-choice-card.is-selected {
+        background: rgba(220,245,225,0.95);
+        border-color: rgba(0,0,0,0.25);
+    }
+
+.adv-choice-left {
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.adv-choice-radio {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.35);
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+}
+
+.adv-choice-option-title {
+    font-weight: 700;
+}
+
+.adv-choice-option-desc {
+    font-size: 13px;
+    opacity: 0.8;
+}

@@ -1,0 +1,47 @@
+.au-cost-row {
+    display: grid;
+    grid-template-columns: 70px 1fr auto; /* icon | amount | button */
+    align-items: center;
+    column-gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    /* Avoid “cost vanished” due to parent clipping */
+    overflow: visible;
+    min-width: 0;
+}
+
+.au-cost-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px; /* matches first column */
+}
+
+.au-cost-amount {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    /* Makes sure it doesn't get pushed off/collapsed */
+    min-width: 0;
+    white-space: nowrap;
+}
+
+
+/* Tablet / tight width: stack button under cost */
+@media (max-width: 900px) {
+    .au-cost-row {
+        grid-template-columns: 70px 1fr;
+        grid-template-areas:
+            "icon amount"
+            "btn  btn";
+        row-gap: 10px;
+    }
+
+    .au-cost-icon {
+        grid-area: icon;
+    }
+
+    .au-cost-amount {
+        grid-area: amount;
+    }
+}

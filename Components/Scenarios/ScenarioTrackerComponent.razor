@@ -1,0 +1,27 @@
+﻿@inherits InventoryAwareComponentBase
+@if (_incompleteTasks.Count == 0)
+{
+    
+    return;
+}
+<StackLayout ItemSpacing="20px">
+    <StackItem>
+        <ImageButtonComponent Name="Orders" Height="69" MarginLeft="0px" OnClick="ShowAllTasksAsync" />
+
+    </StackItem>
+    @foreach (var quest in _incompleteTasks)
+    {
+        var itemKey = quest.Item;
+        var need = quest.Required;
+        var have = InventoryAmount(itemKey); // you likely already have something like this
+        var canComplete = have >= need;
+
+        <StackItem Length="260px">
+            <div class="scenario-card" @onclick="() => CompleteTaskAsync(quest)">
+                <ItemRequirementDisplay Name="@itemKey"
+                                        Have="@have"
+                                        Required="@need" />
+            </div>
+        </StackItem>
+    }
+</StackLayout>

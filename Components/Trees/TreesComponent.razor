@@ -1,0 +1,19 @@
+﻿@inherits TimedOnlyComponent
+@if (_unlimitedSpeedSeedTime is not null)
+{
+    <UnlimitedSpeedSeedsGrantComponent 
+        TimeRemaining="_unlimitedSpeedSeedTime.Value"
+        Category="EnumItemCategory.Tree"
+        
+        />
+    
+    return;
+}
+
+
+@if (RulesManager.AutomationEnabled)
+{
+    <AutomationTreesComponent />
+    return;
+}
+<ManualTreesComponent />

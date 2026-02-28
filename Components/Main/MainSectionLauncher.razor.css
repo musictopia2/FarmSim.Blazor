@@ -1,0 +1,22 @@
+﻿.load-wrap {
+    position: relative;
+    display: inline-block;
+}
+.main-ready-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 10px;
+    border-radius: 999px;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.35);
+}
+
+    .main-ready-dot.is-ready {
+        background: #34c759;
+        visibility: visible;
+    }
+
+    .main-ready-dot.is-not-ready {
+        background: transparent; /* or match button bg */
+        visibility: hidden; /* key: reserves space */
+    }

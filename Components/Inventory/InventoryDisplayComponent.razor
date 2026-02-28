@@ -1,0 +1,152 @@
+﻿@inherits InventoryAwareComponentBase
+@if (string.IsNullOrWhiteSpace(_errorMessage) == false)
+{
+    @_errorMessage
+    return;
+}
+<PopupViewport
+    @bind-Visible="_showUpgrade"
+    TapToClose="true"
+    ShowHeaders="false"
+>
+    <InventoryUpgradeConfirmation StorageCategory="InventoryStorageCategory"
+        OnUpgrade="UpgradeAsync"
+
+        />
+
+</PopupViewport>
+<PopupViewport
+    @bind-Visible="_showDiscard"   
+    TapToClose="true"
+    ShowHeaders="false"
+>
+    <InventoryItemAmountPicker ItemName="@_item"
+        Limit="_limit"
+        CurrentCount="_currentSize"
+        ActionVerb="Discard"
+        OnSubmit="DiscardInventoryItem"
+        OnCancel="CancelDiscard"
+        />
+</PopupViewport>
+
+<PopupViewport @bind-Visible="_showTransfer"
+               TapToClose="true"
+               ShowHeaders="false">
+    <InventoryItemAmountPicker ItemName="@_item"
+                               Limit="_limit"
+                               CurrentCount="_currentSize"
+                               ActionVerb="Transfer"
+                               OnSubmit="TranferInventoryItem"
+                               OnCancel="CancelTransfer" />
+</PopupViewport>
+
+
+<div class="inv-page">
+    <div class="upgrade-bar">
+        <div class="upgrade-left">
+            <div class="storage-title">@StorageTitle</div>
+
+            <div class="storage-progress">
+                <div class="storage-bar">
+                    <div class="storage-fill @ProgressClass" style="@ProgressStyle"></div>
+                </div>
+
+                <div class="storage-count">@_currentSize/@_limit</div>
+            </div>
+        </div>
+        <!-- RIGHT SIDE -->
+        @if (this.IsCooperative == false)
+        {
+            <div class="upgrade-right">
+                @if (_isMaxedOut == false)
+                {
+                    <div class="upgrade-line">
+                        Increase Storage To <span class="upgrade-strong">@_newSize</span>
+                    </div>
+
+                    <button type="button"
+                            class="upgrade-cost-btn"
+                            @onclick="OpenUpgrade">
+                        <ResolvedImage Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Coin"
+                                       class="coin-img"
+                                       Alt="Coin" />
+
+                        <span class="upgrade-cost-text">@_newCoinCost</span>
+                    </button>
+                }
+                else
+                {
+                    <div style="font-size: 2rem;">
+                        Maxed out
+                    </div>
+                }
+
+            </div>
+        }
+    </div>
+
+    <div class="inv-root">
+        <div class="inv-scroll">
+            <GridContainer ColumnGap="5px" RowGap="5px" Columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr">
+                @foreach (var item in _list)
+                {
+                    <div class="inv-item" @key="item.Item" @onclick="() => DisplayInventoryItem(item.Item)">
+                        @if (_showDiscard == false && _showUpgrade == false && _showTransfer == false)
+                        {
+                            <button class="icon-btn inv-discard"
+                                    type="button"
+                                    title="Discard"
+                                    aria-label="Discard"
+                                    @onclick="(e) => OpenDiscard(item.Item)"
+                                    @onclick:stopPropagation="true">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M9 3h6l1 2h4v2H4V5h4l1-2z" fill="currentColor" />
+                                    <path d="M6 7h12l-1 14H7L6 7z" fill="currentColor" />
+                                    <path d="M10 11v7M14 11v7"
+                                          stroke="currentColor"
+                                          stroke-width="2"
+                                          stroke-linecap="round"
+                                          fill="none" />
+                                </svg>
+                            </button>
+                            @if (RulesManager.RuleChosen == EnumRuleCategory.Manual && this.IsBaseline)
+                            {
+                                <button class="icon-btn inv-transfer"
+                                        type="button"
+                                        title="Transfer"
+                                        aria-label="Transfer"
+                                        @onclick="(e) => OpenTransfer(item.Item)"
+                                        @onclick:stopPropagation="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <!-- left box -->
+                                        <rect x="3" y="7" width="7" height="10" rx="2" />
+                                        <!-- right box -->
+                                        <rect x="14" y="7" width="7" height="10" rx="2" />
+                                        <!-- arrow -->
+                                        <path d="M10 12h4" />
+                                        <path d="M13 10l2 2-2 2" />
+                                    </svg>
+                                </button>
+                            }
+                            
+                            
+
+                        }
+                        <ResolvedImage 
+                            class="inv-img"
+                            Name="@item.Item"
+                            Alt="@item.Item"
+                            />
+                        
+                        <div class="inv-amount">
+                            <span class="inv-x">x</span>
+                            <span>@item.Amount</span>
+                        </div>
+                    </div>
+                }
+            </GridContainer>
+        </div>
+    </div>
+</div>

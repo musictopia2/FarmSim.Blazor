@@ -1,0 +1,17 @@
+﻿@inherits FarmComponentBase
+<PopupViewport CloseButtonClick="CloseWorksite"
+               ShowHeaders="false"
+               TapToClose=true
+               CanCloseAutomatically="CanCloseWorksiteAutomatically"
+               @bind-Visible="Visible">
+               @if (RulesManager.AutomationEnabled == false)
+                {
+                    <ManualWorksiteComponent Location="@Location"
+                                             OnCloseManually="CloseWorksite" />
+                    return;
+                }
+                <AutomationWorksiteComponent Location="@Location"
+                                             NextClicked="Next"
+                                             PreviousClicked="Previous"
+                                             OnCloseManually="CloseWorksite" />
+</PopupViewport>

@@ -1,0 +1,75 @@
+﻿@inherits FarmComponentBase
+@if (_loaded == false)
+{
+    return;
+}
+<div class="full-scrollable chest-scroll">
+    <div class="chest-summary-sticky">
+        <div class="chest-opened-line">Opened @_openedCount chests</div>
+        <div class="chest-subline">Rewards were added to your inventory.</div>
+    </div>
+    <StopClickPropagation>
+        <WrapLayout RenderList="_rewards"
+                    ColumnWidth="300px"
+                    Context="reward">
+            <div class="reward-card">
+                <div class="reward-card-top">
+
+                    <div class="shop-title-wrap @(reward.OutputAugmentationKey is not null ? "shop-title-wrap-clickable" : "")"
+                         role="button"
+                         tabindex="0"
+                         @onclick="async () =>
+                         {
+                             if (!string.IsNullOrWhiteSpace(reward.OutputAugmentationKey))
+                             {
+                                 await ShowAugmentationDetailsAsync(reward);
+                             }
+                         }"
+                         @onclick:stopPropagation="true">
+
+                        <div class="shop-title" title="@reward.TargetName.GetWords">
+                            @reward.TargetName.GetWords
+
+                            @if (!string.IsNullOrWhiteSpace(reward.OutputAugmentationKey))
+                            {
+                                <span class="shop-details-hint"> Details ▸</span>
+                            }
+                        </div>
+
+                        <div class="shop-subtitle">
+                            @if (reward.Duration is not null)
+                            {
+                                <span>Duration: @reward.Duration.Value.GetTimeString</span>
+                            }
+
+                            @if (reward.ReducedBy is not null)
+                            {
+                                <span>&nbsp;•&nbsp;Reduced: @reward.ReducedBy.Value.GetTimeString</span>
+                            }
+
+                            @if (reward.Duration is null && reward.ReducedBy is null)
+                            {
+                                <span class="shop-subtitle-placeholder">&nbsp;</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="reward-amount">
+                        <span class="reward-amount-label">Added</span>
+                        <span class="reward-amount-value">+@reward.Quantity.ToString("N0")</span>
+                    </div>
+
+                </div>
+
+                <div class="reward-card-bottom">
+                    <BoostIconComponent Name="@reward.TargetName"
+                                        ReduceBy="@reward.ReducedBy"
+                                        IsAugmented="reward.OutputAugmentationKey is not null"
+                                        ImageSize="55"
+                                        IconSize="30" />
+                </div>
+            </div>
+        </WrapLayout>
+    </StopClickPropagation>
+    
+</div>

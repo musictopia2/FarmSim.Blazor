@@ -1,0 +1,20 @@
+﻿@inherits FarmComponentBase
+@if (_current.Count == 0)
+{
+    <div class="ach-empty">No active achievements.</div>
+    return;
+}
+<StopClickPropagation Class="full-scrollable">
+    <WrapLayout ColumnWidth="400px" RenderList="_current" Context="row">
+        <div class="ach-card">
+            <div class="ach-top">
+                <div class="ach-title">@row.Title</div>
+            </div>
+            <div class="ach-sub">
+                <div class="ach-progress-text">@row.Current</div>
+                
+            </div>
+            
+        </div>
+    </WrapLayout>
+</StopClickPropagation>

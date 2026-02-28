@@ -1,0 +1,20 @@
+﻿@inherits FarmComponentBase
+@if (_currentWorkshop is not null)
+{
+    <AutomationWorkshopComponent Workshop="_currentWorkshop"
+        NavigateTo="NavigateToAsync"
+                                 NextClicked="Next"
+                                 PreviousClicked="Previous" />
+    return;
+}
+<div class="full-scrollable">
+    <WrapLayout RenderList="_workshops" ColumnWidth="100px" Context="workshop">
+
+        <StopClickPropagation>
+            <div class="workshop-tile" @onclick="() => SelectWorkshop(workshop)">
+                <ResolvedImage Name="@workshop.BuildingName"
+                               class="workshop-img" />
+            </div>
+        </StopClickPropagation>
+    </WrapLayout>
+</div>

@@ -1,0 +1,28 @@
+﻿<div class="adv-choice-group">
+    <div class="adv-choice-title">Workshop collection</div>
+    <div class="adv-choice-desc">Choose how finished workshops are collected.</div>
+    <StackLayout>
+        @foreach (var option in _options)
+        {
+            bool selected = Value == option.Value;
+            <StackItem>
+                <button type="button"
+                        class="adv-choice-card @(selected ? "is-selected" : "")"
+                        @onclick="() => SelectAsync(option.Value)"
+                        aria-pressed="@selected">
+
+                    <div class="adv-choice-left">
+                        <span class="adv-choice-radio">@((selected) ? "✓" : "")</span>
+                    </div>
+
+                    <div class="adv-choice-body">
+                        <div class="adv-choice-option-title">@option.Title</div>
+                        <div class="adv-choice-option-desc">@option.Description</div>
+                    </div>
+                </button>
+            </StackItem>
+            
+        }
+    </StackLayout>
+    
+</div>

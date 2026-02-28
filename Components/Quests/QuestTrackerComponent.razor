@@ -1,0 +1,62 @@
+﻿@inherits InventoryAwareComponentBase
+@if (this.IsCooperative)
+{
+    return;
+}
+@if (_incompleteQuests.Count == 0)
+{
+    <div class="quest-title">You completed all the quests</div>
+    return;
+}
+<StackLayout ItemSpacing="20px">
+    <StackItem>
+        <ImageButtonComponent Name="Orders" Height="69" MarginLeft="0px" OnClick="ShowAllQuestsAsync" />
+        
+    </StackItem>
+    @foreach (var quest in _incompleteQuests)
+    {
+        var itemKey = quest.ItemName;
+        var need = quest.Required;
+        var have = InventoryAmount(itemKey); // you likely already have something like this
+        var canComplete = have >= need;
+        var levelLocked = quest.LevelRequired > ProgressionManager.CurrentLevel;
+        <StackItem Length="280px">
+            <div class="quest-card @(levelLocked ? "level-locked" : "")"
+                 @onclick="() => CompleteQuestAsync(quest)">
+
+                <StackLayout>
+                    <StackItem>
+                        @if (quest.Rewards is not null && quest.Rewards.Count > 0)
+                        {
+                            @foreach (var reward in quest.Rewards)
+                            {
+                                <div class="reward-pill">
+                                    <ResolvedImage 
+                                        class="reward-icon"
+                                        Name="@reward.Key"
+                                        Alt="@reward.Key"
+                                        />
+                                    <span class="reward-amt">@reward.Value</span>
+                                </div>
+                            }
+                        }
+                    </StackItem>
+                    <StackItem>
+                        <ItemRequirementDisplay Name="@itemKey"
+                                                NameStyle="@NameStyle"
+                                                Have="@have"
+                                                Required="@need" />
+                    </StackItem>
+                </StackLayout>
+
+                @if (levelLocked)
+                {
+                    <div class="quest-level-badge" title="Unlocks at level @quest.LevelRequired">
+                        <span class="quest-level-badge-lock">🔒</span>
+                        <span>Lvl @quest.LevelRequired</span>
+                    </div>
+                }
+            </div>
+        </StackItem>
+    }
+</StackLayout>

@@ -1,0 +1,14 @@
+﻿@inherits FarmComponentBase
+@if (_unlimitedSpeedSeedTime is not null)
+{
+    <UnlimitedSpeedSeedsGrantComponent Category="EnumItemCategory.Animal"
+                                       TimeRemaining="_unlimitedSpeedSeedTime.Value" />
+    return;
+}
+
+@if (RulesManager.AutomationEnabled == false)
+{
+    <ManualAnimalsComponent />
+    return;
+}
+<AutomationAnimalsComponent />

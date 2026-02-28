@@ -1,0 +1,45 @@
+﻿@inherits InventoryAwareComponentBase
+<div class="p-2 quest-book-root">
+    <div class="full-scrollable">
+        <div class="quest-grid">
+            @foreach (var quest in _incompleteQuests)
+            {
+                var itemKey = quest.ItemName;
+                var need = quest.Required;
+                var have = InventoryAmount(itemKey);
+                var canComplete = have >= need;
+                var levelLocked = quest.LevelRequired > ProgressionManager.CurrentLevel;
+                <div class="quest-grid-item">
+                    <div class="card p-2 h-100 quest-card-shell
+                         @(levelLocked ? "level-locked" : "")
+                         @(!quest.Seen ? "new-quest" : "")">
+                        <div class="d-flex align-items-center justify-content-between gap-2">
+                            <button class="track-btn @(quest.Tracked ? "tracked" : "")"
+                                    title="Track"
+                                    @onclick="() => ToggleTrackedAsync(quest)">
+                                ★
+                            </button>
+
+                            <div class="d-flex align-items-center gap-2 flex-grow-1" style="min-width: 0;">
+                                <ItemRequirementDisplay Name="@itemKey" Required="@need" Have="@have" />
+                            </div>
+
+                            <PrimaryButton IsEnabled="canComplete && levelLocked == false"
+                                           OnClick="() => CompleteQuestAsync(quest)">
+                                ✔
+                            </PrimaryButton>
+                        </div>
+
+                        @if (levelLocked)
+                        {
+                            <div class="quest-level-badge" title="Unlocks at level @quest.LevelRequired">
+                                <span class="quest-level-badge-lock">🔒</span>
+                                <span>Lvl @quest.LevelRequired</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

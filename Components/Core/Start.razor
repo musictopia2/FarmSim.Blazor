@@ -1,0 +1,10 @@
+﻿@if (_farms.Count == 0)
+{
+    return;
+}
+@foreach (var farm in _farms)
+{
+    <PrimaryButton OnClick="() => NavigateTo(farm.Theme, farm.PlayerName, farm.ProfileId, farm.Slot)">
+        @farm.Theme.GetWords @playerName.ToDisplayName(farm.PlayerName) @farm.ProfileId.GetWords
+    </PrimaryButton>
+}

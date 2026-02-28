@@ -1,0 +1,32 @@
+﻿@inherits FarmComponentBase
+
+<IntegerInputModal StartBlank="true"
+    @bind-Visible="_openOptions"
+    CloseOnSubmit="false"
+    MaxDigits="4"
+    DisplayWidth="40vmin"
+    ValueChanged="OnChose">
+    <div class="iu-icon">
+        <ImageButtonComponent Name="@_currentOption" Height="100" />
+        <span class="iu-badge" aria-hidden="true">
+            @((MarkupString)InfinitySvg)
+        </span>
+        @if (_timeLeft != "")
+        {
+            <span class="rental-timer ">
+                @_timeLeft
+            </span>
+        }
+        
+    </div>
+    @InventoryManager.Get(_currentOption)
+</IntegerInputModal>
+
+<ObjectRepeater RenderList="_instances" Context="item">
+    <div class="iu-icon" >
+        <ImageButtonComponent Name="@item" Height="100" OnClick="() => ChooseInstance(item)" />
+        <span class="iu-badge" aria-hidden="true">
+            @((MarkupString)InfinitySvg)
+        </span>
+    </div>
+</ObjectRepeater>

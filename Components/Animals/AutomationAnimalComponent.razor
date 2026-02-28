@@ -1,0 +1,86 @@
+﻿@inherits TimedOnlyComponent
+@if (_option is null)
+{
+    return;
+}
+<PopupViewport @bind-Visible="_showPicker"
+               TapToClose="true"
+               ShowHeaders="false">
+
+    <AmountPickerComponent ActionVerb="@_pickerVerb"
+                           Limit="_pickerLimit"
+                           OnSubmit="SubmitPickerAsync"
+                           OnCancel="ClosePicker" />
+</PopupViewport>
+
+<StackLayout>
+    <StackItem>
+        <ItemRequirementDisplay Name="@_option.Required"
+                                OnClicked="ClickedCropAsync"
+                                Required="@_option.Input"
+                                Have="@_has"
+                                WidthPx="150" />
+    </StackItem>
+    <StackItem>
+        <InventoryAmountIndicator Style="display:inline;"
+                                  FontSize="2.5rem"
+                                  Height="60"
+                                  ItemName="@_option.Output.Item"
+                                  IconName="@_option.Output.Item" />
+    </StackItem>
+    <StackItem>
+        <div style="font-size: 2.5rem; margin-left: 30px;">
+            @AnimalAutomationManager.GetDuration(_option)
+        </div>
+    </StackItem>
+</StackLayout>
+<div>
+    <ArrowLeftComponent TargetHeight="10vh" Clicked="PreviousClicked" />
+    <ArrowRightComponent TargetHeight="10vh" Clicked="NextClicked" />
+    <AutomationUpgradeReducedTimeButton Target="@_option.Output.Item" />
+    <AutomationUpgradeQueButton Target="@_option.Output.Item" PreviousQueCount="@_cap" />
+    <AutomationUpgradeVirtualCountButton Target="@_option.Output.Item" PreviousVirtualCount="@_virtualCount" />
+</div>
+@if (_blocked)
+{
+    <div style="font-size: 2.5rem;">
+        Blocked: Either Inventory Is Full Or Missing Ingredients
+    </div>
+}
+else if (_outstanding <= 0)
+{
+    <div style="font-size: 2.5rem;">
+        No request active. Choose how many to request (max @(_cap)).
+    </div>
+}
+else
+{
+    <div style="font-size: 2.5rem;">
+        Requested queue: @_outstanding / @_cap (Remaining capacity: @_remaining)
+    </div>
+
+    <div style="font-size: 2.5rem;">
+        Next ready: @_nextReadyDisplay
+    </div>
+}
+
+<div style="margin-top: 1rem;">
+    @if (_outstanding <= 0)
+    {
+        <PrimaryButton FontSize="3rem" OnClick="OpenRequestPicker">
+            Request
+        </PrimaryButton>
+    }
+    else if (_remaining > 0)
+    {
+        <PrimaryButton FontSize="3rem" OnClick="OpenAddPicker">
+            Add More
+        </PrimaryButton>
+    }
+    else
+    {
+        <div style="font-size: 2rem;">
+            <span>At capacity.</span>
+        </div>
+    }
+</div>

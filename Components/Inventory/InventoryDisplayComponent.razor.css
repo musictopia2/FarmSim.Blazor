@@ -1,0 +1,267 @@
+﻿.icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 2px solid #666;
+    background: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+    .icon-btn svg {
+        width: 22px;
+        height: 22px;
+        fill: currentColor;
+        color: #444; /* use currentColor so you can theme it */
+    }
+
+    .icon-btn:active {
+        transform: translateY(1px);
+    }
+
+.inv-discard {
+    position: absolute;
+    top: clamp(6px, 0.9vw, 12px);
+    right: clamp(6px, 0.9vw, 12px);
+    width: clamp(44px, 4vw, 56px);
+    height: clamp(44px, 4vw, 56px);
+    border-radius: 14px;
+    z-index: 2;
+}
+
+    /* Bigger icon inside for tablet readability */
+    .inv-discard svg {
+        width: clamp(26px, 2.8vw, 60px);
+        height: clamp(26px, 2.8vw, 60px);
+        color: navy;
+    }
+
+.inv-transfer {
+    position: absolute;
+    top: clamp(6px, 0.9vw, 12px);
+    left: clamp(6px, 0.9vw, 12px); /* <-- key difference */
+    width: clamp(44px, 4vw, 56px);
+    height: clamp(44px, 4vw, 56px);
+    border-radius: 14px;
+    z-index: 2;
+}
+
+    /* Bigger icon inside for tablet readability (match discard) */
+    .inv-transfer svg {
+        width: clamp(26px, 2.8vw, 60px);
+        height: clamp(26px, 2.8vw, 60px);
+        color: navy; /* or a different color if you want */
+    }
+
+/* This is the important part: one column that fills the viewport */
+.inv-page {
+    height: 100dvh; /* better than 100vh on mobile/tablets */
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden; /* prevents the *page* from scrolling */
+}
+/* OUTER BAR */
+.upgrade-bar {
+    display: flex;
+    width: 100%;
+    align-items: flex-start; /* important: no vertical stretching */
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.upgrade-left {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* Title centered like the original game */
+.storage-title {
+    text-align: center;
+    font-weight: 900;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
+    color: black;
+}
+
+/* Progress block */
+.storage-progress {
+    margin-top: 6px;
+    display: grid;
+    gap: 4px;
+}
+
+/* Bar container */
+.storage-bar {
+    height: 48px;
+    border: 3px solid #666;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+
+/* Fill */
+.storage-fill {
+    height: 100%;
+    border-radius: 999px;
+}
+
+    /* Colors */
+    .storage-fill.p-green {
+        background: limegreen;
+    }
+
+    .storage-fill.p-orange {
+        background: darkorange;
+    }
+
+    .storage-fill.p-red {
+        background: red;
+    }
+
+/* Count text under bar */
+.storage-count {
+    text-align: center;
+    font-weight: 900;
+    color: black;
+    line-height: 1.1;
+}
+
+
+/* This is the big one: GetStatus may render <p>, <h*> etc with default margins */
+.upgrade-status,
+.upgrade-status * {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 2rem;
+}
+/* RIGHT SIDE STACK */
+.upgrade-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* right aligned */
+    gap: 4px; /* small controlled vertical spacing */
+}
+
+/* TEXT LINE ABOVE BUTTON */
+.upgrade-line {
+    margin: 0;
+    padding: 0;
+    line-height: 1.1;
+    text-align: right;
+}
+
+
+.upgrade-strong {
+    font-weight: 900;
+}
+.upgrade-cost-btn {
+    appearance: none;
+    -webkit-appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    /* Hard control height */
+    height: 80px; /* EXACT height you want */
+    padding: 0 10px; /* only horizontal padding */
+    margin: 0;
+    border: 2px solid #666;
+    border-radius: 14px;
+    background: white;
+    cursor: pointer;
+    user-select: none;
+    line-height: 1; /* prevent line-box inflation */
+    white-space: nowrap;
+    background-color: lime;
+}
+
+    .upgrade-cost-btn:active {
+        transform: translateY(1px);
+    }
+
+::deep .coin-img {
+    display: block;
+    width: 120px; /* a little smaller so it fits nicely in 64px tall button */
+    height: 120px;
+    object-fit: contain;
+}
+
+
+
+/* Put text back to normal sizing */
+.upgrade-cost-text {
+    font-size: 3.2rem; /* adjust */
+    line-height: 1; /* tight */
+    font-weight: 900;
+}
+/* Make sure your inv-root can sit right under header */
+.inv-root {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+
+/* The only scroller */
+.inv-scroll {
+    flex: 1 1 auto;
+    height: 35vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overflow: auto;
+    padding-top: 6px;
+}
+
+
+
+.inv-item {
+    position: relative;
+    width: 100%; /* fill the grid cell */
+    aspect-ratio: 1 / 1; /* keeps it square and scalable */
+    min-width: 120px; /* safety for very small screens */
+    max-width: 260px; /* optional: prevents absurdly huge icons */
+
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+::deep .inv-img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+    user-select: none;
+    pointer-events: none;
+}
+
+.inv-amount {
+    position: absolute;
+    right: clamp(8px, 1.2vw, 14px);
+    bottom: clamp(6px, 1vw, 12px);
+    display: flex;
+    gap: clamp(4px, 0.6vw, 8px);
+    align-items: baseline;
+    font-weight: 700;
+    font-size: clamp(14px, 1.4vw, 22px); /* MAIN SCALE */
+    line-height: 1;
+    opacity: 0.95;
+}
+
+.inv-x {
+    font-weight: 800;
+    font-size: 0.85em; /* slightly smaller than the number */
+    opacity: 0.85;
+}

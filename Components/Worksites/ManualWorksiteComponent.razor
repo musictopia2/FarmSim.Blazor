@@ -1,0 +1,327 @@
+﻿@inherits TimedOnlyComponent
+
+<PopupViewport ZIndex="2000"
+               ShowHeaders="false"
+               @bind-Visible="_showPowerGloves">
+    <PowerGloveWorksiteComponent Location="@Location"
+                                 OnClose="ClosePowerGloves" />
+</PopupViewport>
+@if (_showCompleteConfirmation)
+{
+    <ConfirmationBlazor Title="Complete Active Item"
+            
+                        Message="@GetCompleteConfirmationMessage"
+                        Results="ConfirmCompleteWorksite" />
+}
+@if (_showFocusedConfirmation)
+{
+    <ConfirmationBlazor Title="Focused Run"
+                        Message="Are you sure you want to change to focused run.  You will lose any worker benefit and doubles the time.   However, will guaranteed the rare items"
+                        Results="ConfirmFocusedRun" />
+}
+@if (string.IsNullOrWhiteSpace(Location))
+{
+    return;
+}
+@if (Status == EnumWorksiteState.Processing)
+{
+    <div class="busy-wrap" style="height: @_height;">
+
+        <BackgroundImageContainer class="busy"
+            Name="@Location">
+                <div class="busy-hero-top">
+                    @Location.GetWords
+                </div>
+                <div class="busy-hero-pill">
+
+                    <span class="busy-hero-text">
+                        @GetProgressText
+                    </span>
+                    <StopClickPropagation>
+                        <div class="powerglove-pill-container">
+                            <div class="pill-slot">
+                                <ImageButtonComponent Name="@CurrencyKeys.FinishSingleWorksite"
+                                    OnClick="OnFinishSingleClicked"
+                                                    Height="80" />
+                            </div>
+
+                            <div class="pill-slot">
+                                <ImageButtonComponent Name="@CurrencyKeys.PowerGloveWorksite"
+                                    OnClick="OnPowerGloveClicked"
+                                                    Height="80" />
+                            </div>
+                        </div>
+                    </StopClickPropagation>
+
+
+                </div>
+
+                @if (CanResetToFocused)
+                {
+
+                        <div class="busy-focused-action">
+                            <PrimaryButton FontSize="1.1rem" OnClick="ResetToFocused">
+                                Switch to Focused (resets timer)
+                            </PrimaryButton>
+                        </div>
+                }
+
+                <div class="busy-workers-wrap">
+                    @foreach (var w in _shownList)
+                    {
+                            <div class="busy-worker-tile">
+                                <ResolvedImage 
+                                    class="busy-worker-img"
+                                    Name="@w.WorkerName"
+                                    Alt="@w.WorkerName"
+                                    />
+                                
+                            </div>
+                    }
+                </div>
+
+                @{
+                        var preview = GetPreview();
+                }
+
+                <div class="processing-rewards">
+                    @foreach (var r in preview)
+                    {
+                            <div class="processing-reward-tile">
+                                <ChanceRing PercentChance="@r.Chance"
+                                            OnClick="() => GetPreviewDetail(r)"
+                                            FillColor="@cc1.SaddleBrown.ToWebColor"
+                                            Size="@_ringSize"
+                                            StrokeWidth="10px">
+                                    <div class="reward-ring-content">
+                                        <ResolvedImage 
+                                            class="reward-ring-img"
+                                            Name="@r.Item"
+                                            Alt="@r.Item"
+                                            />
+                                        
+                                        <div class="reward-ring-amount">@r.Amount</div>
+                                    </div>
+                                </ChanceRing>
+                            </div>
+                    }
+                </div>
+        >
+
+        </BackgroundImageContainer>
+
+        
+    </div>
+
+    return;
+}
+@if (Status == EnumWorksiteState.Collecting)
+{
+    <div class="busy-wrap" style="height: @_height;">
+        <BackgroundImageContainer Class="busy" Name="@Location">
+            @if (WorksiteManager.CanCollectRewards(Location) == false)
+            {
+                <PrimaryButton OnClick="OnCloseManually">
+                    Close Out Since you cannot collect rewards
+                </PrimaryButton>
+            }
+            else
+            {
+                <!-- rewards panel -->
+                <div class="collect-rewards-panel">
+
+                    <div class="collect-rewards-header">
+                        <div class="collect-title">@Location.GetWords</div>
+                        <div class="collect-sub">Rewards Ready</div>
+                    </div>
+
+                    <!-- individual rewards -->
+                    <div class="collect-rewards-wrap">
+                        @foreach (var r in _rewards)
+                        {
+                            <button type="button"
+                                    class="collect-reward-tile"
+                                    @onclick="() => OnRewardClicked(r)">
+                                <ResolvedImage 
+                                    Name="@r.Item"
+                                               class="collect-reward-img"
+                                               Alt="@r.Item"
+                                               />
+                                
+                                <div class="collect-amount-badge">
+                                    @r.Amount
+                                </div>
+                            </button>
+                        }
+                    </div>
+
+                    <!-- COLLECT ALL — BELOW the grid -->
+                    <div class="collect-rewards-footer">
+                        <SuccessButton OnClick="CollectAllRewards">
+                            Collect All Rewards
+                        </SuccessButton>
+                    </div>
+
+                </div>
+
+                <!-- workers pinned at bottom -->
+                <div class="collect-workers-wrap">
+                    @foreach (var w in _shownList)
+                    {
+                        <div class="busy-worker-tile">
+                            <ResolvedImage class="busy-worker-img"
+                                Name="@w.WorkerName"
+                                Alt="@w.WorkerName"
+                                />
+                            
+                        </div>
+                    }
+                </div>
+            }
+        </BackgroundImageContainer>
+        
+    </div>
+    
+    return;
+}
+
+<StackLayout ItemSpacing="20px">
+
+    <StackItem StopClickPropagation>
+        <div style="height: 80px; visibility:@(CanGoUp ? "visible" : "hidden");">
+            <ArrowUpComponent TargetHeight="100%" Clicked="GoUp" />
+        </div>
+        <div style="height: 80px; margin-top: 5px; visibility:@(CanGoDown ? "visible" : "hidden");">
+            <ArrowDownComponent TargetHeight="100%"
+                                Clicked="GoDown" />
+        </div>
+    </StackItem>
+    <StackItem Length="300px" StopClickPropagation>
+        <div class="worksite-hero" @onclick="ProcessWorker">
+            <ResolvedImage Name="@Location"
+                           class="worksite-hero-img" 
+                           Alt="@Location"
+                           />
+            
+
+            
+            @if (_currentWorker is not null)
+            {
+                <!-- Centered worker and possible rental time -->
+                <div class="worksite-worker-center">
+                    @if (string.IsNullOrWhiteSpace(_currentRentalTime) == false)
+                    {
+                        <div class="rental-timer rental-above-worker">
+                            @_currentRentalTime
+                        </div>
+                    }
+                    <ResolvedImage 
+                        Name="@_currentWorker.WorkerName"
+                        Alt="@_currentWorker.WorkerName"
+                                   class="worksite-worker-img"            />
+                    
+                </div>
+            }
+            
+
+            <!-- Top scrim -->
+            <div class="worksite-hero-top">
+                <div class="worksite-title">@Location.GetWords</div>
+            </div>
+
+            <!-- Bottom action area -->
+            <div class="worksite-hero-bottom">
+
+                <SuccessButton IsEnabled="CanStartJob" OnClick="StartJob">
+                    @GetDurationText
+                </SuccessButton>
+            </div>
+
+        </div>
+        
+        <div>@_currentWorker?.Details</div>
+    </StackItem>
+    <StackItem>
+        @if (SuppliesNeeded.Count > 0)
+        {
+            <div class="supplies-title">
+                Supplies Needed
+            </div>
+            <div class="supplies-grid">
+                @foreach (var item in SuppliesNeeded)
+                {
+                    <ItemRequirementDisplay Variant="EnumRequirementVariant.Tile"
+                                            Name="@item.Item"
+                                            OnClicked="AttemptWorkshopAsync"
+                                            Required="item.Amount"
+                                            Have="InventoryManager.Get(item.Item)" />
+                }
+                
+            </div>
+        }
+        else
+        {
+            <BoostIconComponent Name="@BoostKeys.WorksiteNoSupplies" ImageSize="200" />
+        }
+
+        <div class="worksite-grid">
+            <SimpleRepeater HowMany="_shownList.Count" Context="i">
+                @{
+                    var worker = _shownList[i - 1]; // 1-based -> 0-based
+                }
+
+                <div class="worker-slot">
+                    <ResolvedImage 
+                        Name="@worker.WorkerName"
+                                   class="worker-img"
+                                   Alt="@worker.WorkerName"
+                                   />
+                </div>
+            </SimpleRepeater>
+
+            @* If you still want extra empty slots to show capacity *@
+            @if (_shownList.Count < _totalPossibleWorkers)
+            {
+                <SimpleRepeater HowMany="@(_totalPossibleWorkers - _shownList.Count)" Context="x">
+                    <div class="worker-slot empty"></div>
+                </SimpleRepeater>
+            }
+        </div>
+    </StackItem>
+    
+
+    <StackItem>
+        <div>
+            Rewards
+        </div>
+        @{
+            var list = GetPreview();
+        }
+        <WrapLayout
+           RenderList="list"
+           Context="item"
+           ColumnWidth="100px"
+        >
+            <ChanceRing PercentChance="@item.Chance"
+                        OnClick="() => GetPreviewDetail(item)"
+                        ContentOffsetYPx="-2"
+                        FillColor="@cc1.SaddleBrown.ToWebColor"
+                        Size="90px"
+                        StrokeWidth="10px">
+                <div class="reward-ring-content">
+                    <ResolvedImage class="reward-ring-img"
+                        Name="@item.Item"
+                        Alt="@item.Item"
+                        />
+                    
+
+                    <div class="reward-ring-amount">
+                        @item.Amount
+                    </div>
+                </div>
+            </ChanceRing>
+        </WrapLayout>
+
+        
+    </StackItem>
+</StackLayout>

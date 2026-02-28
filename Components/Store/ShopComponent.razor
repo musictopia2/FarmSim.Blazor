@@ -1,0 +1,176 @@
+﻿@inherits FarmComponentBase
+@if (ProgressionManager.CompletedGame)
+{
+    <div>
+        You completed the game.  Therefore, no need to see the shop.
+    </div>
+    return;
+}
+
+<PopupViewport
+    @bind-Visible="_showConfirmation"
+    ShowHeaders="false"
+>
+    <AcquireConfirmation StoreItem="_currentItem"
+                         OnClose="CancelPurchase"
+                         OnAcquire="ConfirmedAsync"   />
+</PopupViewport>
+
+<TabButtonContainer ActiveKey="@StoreManager.CurrentCategory.ToString()"
+                    ActiveKeyChanged="OnActiveKeyChanged">
+
+    @foreach (var tab in _tabs)
+    {
+        <TabPage Text="@tab.Text" Key="@tab.Category.ToString()">
+            <StopClickPropagation Class="full-scrollable">
+                <WrapLayout RenderList="_list"
+                            Context="row"
+                            ColumnWidth="320px">
+                    <div class="shop-card @CardStateClass(row)"
+                         role="button"
+                         tabindex="0"
+                         @onclick="() => OnRowClicked(row)">
+
+                        <!-- Top row: status icon + name -->
+                        <div class="shop-card-top">
+                            <div class="shop-status">
+                                @if (row.IsLocked)
+                                {
+                                    <ResolvedImage 
+                                        class="shop-status-img"
+                                        Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Padlock"
+                                        Alt="Locked"
+                                        />
+
+                                }
+                                else if (row.IsMaxedOut)
+                                {
+                                    <span class="shop-status-svg" aria-label="Maxed">
+                                        @* inline svg so you can color it green *@
+                                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="shop-status-placeholder"></span>
+                                }
+                            </div>
+
+                            <div class="shop-title-wrap @(row.OutputAugmentationKey is not null ? "shop-title-wrap-clickable" : "")"
+                                 role="button"
+                                 tabindex="0"
+                                 @onclick="async () =>
+                                 {
+                                     if (!string.IsNullOrWhiteSpace(row.OutputAugmentationKey))
+                                     {
+                                         await ShowAugmentationDetailsAsync(row);
+                                     }
+                                 }"
+                                 @onclick:stopPropagation="true">
+
+                                <div class="shop-title" title="@row.TargetName.GetWords">
+                                    @row.TargetName.GetWords
+
+                                    @if (!string.IsNullOrWhiteSpace(row.OutputAugmentationKey))
+                                    {
+                                        <span class="shop-details-hint"> Details ▸</span>
+                                    }
+                                </div>
+
+                                @if (row.Duration is not null || row.ReducedBy is not null)
+                                {
+                                    <div class="shop-subtitle">
+                                        @if (row.Duration is not null)
+                                        {
+                                            <span>Duration: @row.Duration.Value.GetTimeString</span>
+                                        }
+                                        @if (row.ReducedBy is not null)
+                                        {
+                                            <span>&nbsp;•&nbsp;Reduced: @row.ReducedBy.Value.GetTimeString</span>
+                                        }
+                                    </div>
+                                }
+                                else if (row.Quantity > 0)
+                                {
+                                    <div class="shop-subtitle">
+                                        Quantity To Add: @row.Quantity
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+
+                        <!-- Bottom row: costs (left), owned/max (middle), item image (right) -->
+                        <div class="shop-card-bottom">
+                            <div class="shop-costs">
+                                @if (row.RentalState is not null)
+                                {
+                                    <span class="shop-muted">@row.RentalDetails</span>
+                                }
+                                else if (row.IsMaxedOut)
+                                {
+                                    <span class="shop-muted">Maxed</span>
+                                }
+                                else if (row.IsLocked)
+                                {
+                                    <span class="shop-muted">Level @row.LevelRequired</span>
+                                }
+                                else if (row.IsFree)
+                                {
+                                    <span class="shop-muted">Free</span>
+                                }
+
+                                else
+                                {
+                                    @foreach (var cost in row.Costs)
+                                    {
+                                        <div class="shop-cost-pill">
+                                            <ResolvedImage 
+                                                class="shop-cost-img"
+                                                Name="@cost.Key"
+                                                />
+                                            <span class="shop-cost-amt">@cost.Value.ToString("N0")</span>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+
+                            <div class="shop-owned">
+                                @if (row.Category == EnumCatalogCategory.TimedBoosts || row.Category == EnumCatalogCategory.Misc)
+                                {
+                                    <span class="shop-owned-label">Qty </span>
+                                    <span class="shop-owned-value">@row.OwnedCount</span>
+                                }
+                                else if (row.Duration is null)
+                                {
+                                    @($"{row.OwnedCount}/{row.TotalPossible}")
+                                }
+                                else
+                                {
+                                    <span class="shop-owned-label">Rental</span>
+                                }
+                            </div>
+
+                            <BoostIconComponent IsTree="row.Category == EnumCatalogCategory.Tree"
+                                                Name="@row.TargetName"
+                                                ReduceBy="@row.ReducedBy"
+                                                IsAugmented="row.OutputAugmentationKey is not null"
+                                                ImageSize="55"
+                                                IconSize="30" />
+                        </div>
+                    </div>
+
+                </WrapLayout>
+
+            </StopClickPropagation>
+
+
+
+        </TabPage>
+
+    }
+
+</TabButtonContainer>

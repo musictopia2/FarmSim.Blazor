@@ -1,0 +1,46 @@
+﻿@inherits InventoryAwareComponentBase
+<div class="p-2 scenario-book-root">
+
+    <div class="scenario-grid">
+        @foreach (var quest in _incompleteTasks)
+        {
+            var itemKey = quest.Item;
+            var need = quest.Required;
+            var have = InventoryAmount(itemKey);
+            var canComplete = have >= need;
+
+            <div class="task-grid-item">
+                <div class="card p-2 h-100">
+                    <div class="d-flex align-items-center justify-content-between gap-2">
+
+                        <!-- Track toggle -->
+                        <button class="track-btn @(quest.Tracked ? "tracked" : "")"
+                                title="Track"
+                                @onclick="() => ToggleTrackedAsync(quest)">
+                            ★
+                        </button>
+
+                        <!-- Requirement -->
+                        <div class="d-flex align-items-center gap-2 flex-grow-1"
+                             style="min-width: 0;">
+
+
+                            <ItemRequirementDisplay Name="@itemKey"
+                                                    Required="@need"
+                                                    Have="@have" />
+
+
+                           
+                        </div>
+
+                        <!-- Complete -->
+                        <PrimaryButton IsEnabled="canComplete"
+                                       OnClick="() => CompleteTaskAsync(quest)">
+                            ✔
+                        </PrimaryButton>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

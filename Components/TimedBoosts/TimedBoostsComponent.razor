@@ -1,0 +1,49 @@
+﻿@inherits FarmComponentBase
+<div class="boosts-title">Power Boosts</div>
+<div class="boosts-root">
+    <StopClickPropagation>
+        <div class="full-scrollable">
+            <WrapLayout RenderList="_credits"
+                        ColumnWidth="200px"
+                        Context="boost">
+                <div class="boost-card" @onclick="() => GiveDetailsAsync(boost)">
+
+                    <div class="boost-icon-slot">
+                        <BoostIconComponent ImageSize="72"
+                                            IconSize="40"
+                                            Name="@boost.BoostKey"
+                                            IsAugmented="boost.OutputAugmentationKey is not null"
+                                            ReduceBy="@boost.ReduceBy" />
+                    </div>
+
+                    <div class="boost-name">@GetBoostTitle(boost.BoostKey)</div>
+
+                    <!-- reserved line so cards are same height -->
+                    <div class="boost-detail-line">
+                        @if (boost.ReduceBy.HasValue)
+                        {
+                            <span><b>Reduce By:</b> @boost.ReduceBy.Value.GetTimeString</span>
+                        }
+
+                        else
+                        {
+                            <span class="boost-detail-placeholder">&nbsp;</span>
+                        }
+                    </div>
+
+                    <div class="boost-meta">
+                        <div><b>Duration:</b> @boost.Duration.GetTimeString</div>
+                        <div><b>Quantity:</b> @boost.Quantity</div>
+                    </div>
+
+                    <button class="boost-btn"
+                            @onclick:stopPropagation="true"
+                            @onclick="() => ActivateBoostAsync(boost)">
+                        Activate
+                    </button>
+                </div>
+            </WrapLayout>
+        </div>
+        
+    </StopClickPropagation>
+</div>

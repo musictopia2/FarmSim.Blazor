@@ -1,0 +1,71 @@
+﻿.quest-card {
+    border: 2px solid #666;
+    border-radius: 12px;
+    background: white;
+    padding: 2px;
+    box-sizing: border-box;
+    user-select: none;
+    position: relative;
+}
+
+
+/* Left column pinned to bottom-left */
+.quest-rewards {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* bottom */
+    align-items: flex-start; /* left */
+    gap: 6px;
+    min-height: 100%; /* important when right side grows */
+}
+
+.reward-pill {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
+::deep .reward-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.reward-amt {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* Right column: your existing layout */
+.quest-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+
+.quest-card.level-locked {
+    opacity: 0.80;
+    filter: grayscale(0.35);
+}
+
+.quest-level-badge {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border: 2px solid #666;
+    border-radius: 999px;
+    background: white;
+    font-weight: 900;
+    font-size: 0.85rem;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.quest-level-badge-lock {
+    font-size: 0.95rem;
+}

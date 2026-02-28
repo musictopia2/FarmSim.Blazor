@@ -1,0 +1,80 @@
+﻿@inherits TimedOnlyComponent
+
+@if (_selectedOption is null)
+{
+    return;
+}
+<PopupCustomPositions
+    Visible="_showOptions"
+    CloseButtonClick="ClosePopup"
+    DisableBackgroundClick=false
+    Width="500px"
+    Top="200px"
+    Left="600px"
+                      
+>
+    <AnimalChoiceModal Animal="Animal" OnOptionChosen="SelectOptionAndStart" />
+</PopupCustomPositions>
+
+<PopupViewport
+   @bind-Visible="_showUpgrades"
+   TapToClose="true"
+   ShowHeaders="false"
+>
+    <ManualUpgradeAnimalModal 
+        Animal="Animal"
+        OnUpgraded="Upgraded"
+        />
+</PopupViewport>
+
+
+<BasicProgressModal @bind-Visible="_showProgress">
+    <AnimalProgressModal Animal="Animal"
+                         Option="_selectedOption" />
+</BasicProgressModal>
+
+@{
+    EnumAnimalState state = AnimalManager.GetState(Animal);
+    string animalName = AnimalManager.GetName(Animal);
+
+    string producedItem = _selectedOption.Output.Item;
+    int leftToCollect = AnimalManager.Left(Animal);
+
+    bool isCollecting = state == EnumAnimalState.Collecting;
+
+    // What image should the card show?
+    string cardImage = isCollecting
+        ? producedItem
+        : animalName;
+}
+
+<div class="card p-2"
+    
+     style="width: 55px; height: 80px; background-color:@GetBackGround;"
+     @onclick="CardClicked">
+
+
+   
+
+    <div class="d-flex justify-content-center">
+        <ResolvedImage 
+            Name="@cardImage"
+                       style="width: 50px; height: 50px; object-fit: contain;"        />
+        
+    </div>
+
+    <div class="text-center">
+        @if (isCollecting)
+        {
+            
+            <div class="text-success">@leftToCollect</div>
+            
+        }
+        else if (AdvancedSettingsManager.Settings.AnimalDefaultMode != EnumAnimalDefaultOption.Manual)
+        {
+            <InventoryAmountIndicator Style="margin-top: -2px;" ShowIcon="false"
+                ItemName="@_selectedOption.Output.Item" />
+        }
+
+    </div>
+</div>

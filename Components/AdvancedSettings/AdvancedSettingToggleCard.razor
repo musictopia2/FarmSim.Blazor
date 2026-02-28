@@ -1,0 +1,56 @@
+﻿<button type="button"
+        class="adv-toggle-card @(Value ? "is-on" : "is-off") @(Disabled ? "is-disabled" : "")"
+        @onclick="HandleToggleAsync"
+        style="margin-bottom: 5px;"
+        disabled="@Disabled"
+        aria-pressed="@Value"
+        aria-label="@AriaLabelComputed">
+
+    <div class="adv-toggle-left">
+        @if (!string.IsNullOrWhiteSpace(IconCss))
+        {
+            <div class="adv-toggle-icon @IconCss" aria-hidden="true"></div>
+        }
+        else if (IconContent is not null)
+        {
+            <div class="adv-toggle-icon" aria-hidden="true">@IconContent</div>
+        }
+    </div>
+
+    <div class="adv-toggle-body">
+        <div class="adv-toggle-title-row">
+            <div class="adv-toggle-title">@Title</div>
+
+            <div class="adv-toggle-pill @(Value ? "pill-on" : "pill-off")">
+                <span class="adv-toggle-pill-text">@(Value? OnText : OffText)</span>
+                @if (Value && ShowCheckmark)
+                {
+                    <span class="adv-toggle-check" aria-hidden="true">✓</span>
+                }
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Description))
+        {
+            <div class="adv-toggle-desc">@Description</div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(SecondaryText))
+        {
+            <div class="adv-toggle-secondary">@SecondaryText</div>
+        }
+    </div>
+
+    @if (ShowInfo && OnInfo.HasDelegate)
+    {
+        <div class="adv-toggle-right">
+            <button type="button"
+                    class="adv-toggle-info"
+                    @onclick="HandleInfoAsync"
+                    @onclick:stopPropagation="true"
+                    aria-label="More info">
+                ⓘ
+            </button>
+        </div>
+    }
+</button>

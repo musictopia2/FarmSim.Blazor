@@ -1,0 +1,22 @@
+﻿@inherits FarmComponentBase
+<div class="uss-timer">
+    <div class="uss-label">Unlimited Speed Seeds Time Left:</div>
+    <div class="uss-value">@TimeRemaining.GetTimeString</div>
+</div>
+<StopClickPropagation Class="trees-root">
+    <WrapLayout RenderList="_items" Context="item"
+                ColumnWidth="180px">
+        <ImageButtonComponent Name="@item.ItemName"
+                              OnClick="() => ChooseInstance(item)"
+                              Height="100" />
+        <span style="font-size:  2rem;">@InventoryManager.Get(item.ItemName)</span>
+    </WrapLayout>
+</StopClickPropagation>
+
+
+@code {
+    private RenderFragment BuildSideContent(string option) => @<div>
+        <ImageButtonComponent Name="@option" Height="100" />
+        <div style="font-size:1.5rem;">Have: @InventoryManager.Get(option)</div>
+    </div>;
+}

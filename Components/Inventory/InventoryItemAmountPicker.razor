@@ -1,0 +1,38 @@
+﻿@inherits FarmComponentBase
+<span style="font-size: 3rem;">@FullDisplay</span>
+
+<ImageButtonComponent Name="@ItemName" Height="100" />
+<span style="font-size: 3rem;">
+    @ItemName @_currentAmount
+</span>
+<PrimaryButton FontSize="3rem;" OnClick="OnCancel">
+    Cancel
+</PrimaryButton>
+<StopClickPropagation>
+    <div style="font-size: 3rem;">
+        Proposed @ActionVerb Amount:  @_proposed
+    </div>
+
+    <ArrowLeftComponent TargetHeight="10vh" Clicked="GoLeft" />
+    <PrimaryButton FontSize="3rem" OnClick="ProposeOne">
+        @ActionVerb 1
+    </PrimaryButton>
+
+    <PrimaryButton FontSize="3rem" OnClick="OpenCustom">
+        @ActionVerb Custom
+    </PrimaryButton>
+
+    <PrimaryButton FontSize="3rem" OnClick="ProposeAll">
+        @ActionVerb All
+    </PrimaryButton>
+    <ArrowRightComponent TargetHeight="10vh" Clicked="GoRight" />
+    @if (_proposed > 0)
+    {
+        <div>
+            <DangerButton FontSize="3rem" OnClick="Submit">
+                @ActionVerb @_proposed
+            </DangerButton>
+        </div>
+    }
+    
+</StopClickPropagation>

@@ -1,0 +1,30 @@
+﻿@inherits FarmComponentBase
+@if (_currentWorkshop is not null)
+{
+    <ManualWorkshopComponent Workshop="_currentWorkshop"
+        NextClicked="Next"
+        PreviousClicked="Previous"
+        NavigateTo="NavigateToAsync"
+                       RentalExpired="OnRentalExpired"  />
+    return; 
+}
+<div class="full-scrollable">
+    <WrapLayout RenderList="_workshops" ColumnWidth="100px" Context="workshop">
+
+        <StopClickPropagation>
+            <div class="workshop-tile" @onclick="() => SelectWorkshop(workshop)">
+                <ResolvedImage 
+                    Name="@workshop.Name"
+                    class="workshop-img"
+                    />
+                
+
+                @if (workshop.ReadyCount > 0)
+                {
+                    <div class="workshop-badge">@workshop.ReadyCount</div>
+                }
+            </div>
+        </StopClickPropagation>
+
+    </WrapLayout>
+</div>

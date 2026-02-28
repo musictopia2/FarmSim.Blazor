@@ -1,0 +1,23 @@
+﻿@inherits TimedOnlyComponent
+<WrapLayout RenderList="_worksites" ColumnWidth="110px" Context="worksite">
+    @{
+        EnumWorksiteState state = WorksiteManager.GetStatus(worksite);
+        var isCollecting = state == EnumWorksiteState.Collecting;
+    }
+
+    <div class="worksite-tile @(isCollecting ? "ready" : "")">
+         <ImageButtonComponent 
+             Class="worksite"
+             OnClick="() => SelectWorksiteAsync(worksite)"
+             Height="100"
+             Name="@worksite"
+             />
+        
+        @if (isCollecting)
+        {
+            <div class="worksite-ready-overlay" aria-hidden="true">
+                <div class="worksite-ready-qm">?</div>
+            </div>
+        }
+    </div>
+</WrapLayout>

@@ -1,0 +1,63 @@
+﻿@inherits FarmComponentBase
+<TabButtonContainer>
+    <TabPage Text="Current">
+        @if (_current.Count == 0)
+        {
+            <div class="ach-empty">No active achievements.</div>
+            return;
+        }
+
+        <StopClickPropagation Class="full-scrollable">
+            <WrapLayout ColumnWidth="400px" RenderList="_current" Context="row">
+                <div class="ach-card">
+                    <div class="ach-top">
+                        <div class="ach-title">@row.Title</div>
+                        <div class="ach-coin">+@row.CoinReward</div>
+                    </div>
+
+                    <div class="ach-sub">
+                        <div class="ach-progress-text">@row.ProgressText</div>
+                        @if (row.IsRepeatable)
+                        {
+                            <div class="ach-repeat">Repeatable</div>
+                        }
+                    </div>
+
+                    <div class="ach-bar">
+                        <div class="ach-bar-fill" style="width:@((row.Percent * 100).ToString("0"))%"></div>
+                    </div>
+                </div>
+            </WrapLayout>
+        </StopClickPropagation>
+        
+    </TabPage>
+    <TabPage Text="Completed">
+        @if (_completed.Count == 0)
+        {
+            <div class="ach-empty">No achievements completed yet.</div>
+            return;
+        }
+        <StopClickPropagation Class="full-scrollable">
+            <WrapLayout ColumnWidth="200px" RenderList="_completed" Context="row">
+                <div class="ach-card ach-card-done">
+                    <div class="ach-top">
+                        <div class="ach-title">@row.Title</div>
+                        <div class="ach-coin">+@row.CoinReward</div>
+                    </div>
+
+                    <div class="ach-sub">
+                        @if (row.IsRepeatable)
+                        {
+                            <div class="ach-progress-text">Last tier: @row.Target.ToString("N0")</div>
+                        }
+                        else
+                        {
+                            <div class="ach-progress-text">Completed: @row.Target.ToString("N0")</div>
+                        }
+                    </div>
+                </div>
+            </WrapLayout>
+        </StopClickPropagation>
+        
+    </TabPage>
+</TabButtonContainer>

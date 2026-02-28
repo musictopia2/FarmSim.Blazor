@@ -1,0 +1,405 @@
+﻿/* =========================================================
+   WORKSITE MODES: PROCESSING + COLLECTING HERO
+   ========================================================= */
+
+/* Shared hero container (used for Processing + Collecting) */
+/* Parent establishes a height for 100% to work */
+.busy-wrap {
+    /* pick the max space you want it to take on screen */
+    display: flex;
+}
+
+/* Square fits inside that height */
+::deep .busy {
+    height: 72%;
+    aspect-ratio: 1 / 1;
+    /* IMPORTANT: when height is driving size, width must be allowed to follow */
+    width: auto;
+    max-width: 100%;
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    --top-safe: 120px;
+    --bottom-safe: 180px;
+}
+
+/* ---------- Processing: title scrim ---------- */
+.busy-hero-top {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 10px;
+    color: #fff;
+    font-weight: 800;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.72), rgba(0,0,0,0));
+    z-index: 50;
+}
+
+/* ---------- Processing: progress pill ---------- */
+.busy-hero-pill {
+    position: absolute;
+    left: 50%;
+    top: 60px;
+    width: 250px;
+    transform: translateX(-50%);
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.78);
+    color: #fff;
+    font-weight: 900;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+    white-space: nowrap;
+    z-index: 60;
+}
+
+
+.busy-hero-text {
+    padding-right: 70px; /* reserve space so text never shifts */
+}
+
+.powerglove-pill-container {
+    position: absolute;
+    right: -100px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column; /* 👈 stack top-to-bottom */
+    gap: 6px; /* spacing between buttons */
+}
+
+.pill-slot {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    
+    cursor: pointer;
+}
+
+
+/* ---------- Worker strip (use for BOTH Processing + Collecting) ---------- */
+.busy-workers-wrap,
+.collect-workers-wrap {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.68), rgba(0,0,0,0));
+    z-index: 80;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 60px);
+    gap: 8px;
+    justify-content: center;
+    align-content: start;
+}
+
+/* Worker tile */
+.busy-worker-tile {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* ---------- Processing: rewards grid area (ChanceRing preview) ---------- */
+/* IMPORTANT: must match ChanceRing Size="140px" */
+.processing-rewards {
+    --ring-size: 100px;
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: var(--top-safe);
+    bottom: var(--bottom-safe);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, var(--ring-size));
+    gap: 5px;
+    justify-content: start;
+    align-content: start;
+    overflow: hidden;
+    z-index: 30;
+}
+
+/* Each tile reserves a 140x140 slot so rings never touch */
+.processing-reward-tile {
+    width: var(--ring-size);
+    height: var(--ring-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================================================
+   COLLECTING: REWARDS PANEL + GRID + BUTTON BELOW GRID
+   ========================================================= */
+
+.collect-rewards-panel {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 10px;
+    bottom: var(--bottom-safe);
+    padding: 10px;
+    border-radius: 14px;
+    background: rgba(0,0,0,0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Panel scrolls if content exceeds space */
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 40;
+}
+
+.collect-rewards-header {
+    color: #fff;
+}
+
+.collect-title {
+    font-weight: 900;
+}
+
+.collect-sub {
+    opacity: 0.9;
+    font-weight: 700;
+}
+
+/* reward icons wrap left-to-right then next line */
+.collect-rewards-wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 90px);
+    gap: 10px;
+    align-content: start;
+}
+
+/* Collect All directly below rewards grid */
+.collect-rewards-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+}
+
+/* clickable reward tile */
+.collect-reward-tile {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 14px;
+    border: none;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+    .collect-reward-tile:active {
+        transform: scale(0.98);
+    }
+
+::deep .collect-reward-img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+/* amount bottom-right */
+.collect-amount-badge {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.78);
+    color: #fff;
+    font-weight: 900;
+    font-size: 0.85rem;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+}
+
+/* =========================================================
+   IDLE (your existing 300x300 hero)
+   ========================================================= */
+
+.worksite-hero {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+::deep .worksite-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.worksite-hero-top {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 10px;
+    color: white;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.65), rgba(0,0,0,0));
+}
+
+
+/* ✅ Bottom button anchor */
+.worksite-hero-bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    display: flex;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+
+.worksite-title {
+    font-weight: 700;
+}
+
+/* centered worker badge */
+.worksite-worker-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.0) 75%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.rental-above-worker {
+    position: absolute;
+    left: 50%;
+    top: -14px; /* lift above the circle */
+    transform: translateX(-50%);
+}
+::deep .worksite-worker-img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+}
+
+/* =========================================================
+   SUPPLIES
+   ========================================================= */
+
+.supplies-title {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.supplies-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 120px);
+    gap: 16px;
+    justify-items: center;
+}
+
+.supply-tile {
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.supply-img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.req-detail {
+    font-size: 1.25rem;
+    margin-top: 4px;
+    text-align: center;
+}
+
+/* =========================================================
+   WORKER SELECT GRID (idle list)
+   ========================================================= */
+
+.worksite-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 55px);
+    gap: 8px;
+    justify-content: start;
+    align-content: start;
+    overflow-x: hidden;
+}
+
+.worker-slot {
+    position: relative;
+    width: 55px;
+    height: 55px;
+    background: lightgray;
+    border: 2px solid #999;
+    border-radius: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .worker-slot.empty {
+        opacity: 0.35;
+        border-style: dashed;
+    }
+
+::deep .worker-img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+/* =========================================================
+   CHANCE RING CONTENT (works for both busy + idle previews)
+   ========================================================= */
+.reward-ring-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+::deep .reward-ring-img {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.reward-ring-amount {
+    color: white;
+    font-weight: 700;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+
+
+.busy-focused-action {
+    margin: 12px 0;
+    display: flex;
+    justify-content: center;
+}

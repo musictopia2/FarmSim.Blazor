@@ -1,0 +1,108 @@
+.tab-header-root {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.middleHeight {
+    height: 100px;
+}
+
+.tab-icon-slot {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Checkmark */
+.upgrade-check {
+    width: 30px;
+    height: 30px;
+    fill: currentColor;
+    color: #2faa3a;
+}
+
+.upgrade-row-compact {
+    display: inline-flex; /* KEY: doesn't span the whole column */
+    align-items: center;
+    gap: 0.75rem; /* space between costs and button */
+}
+
+.upgrade-costs-left {
+    display: inline-flex;
+    gap: 0.5rem;
+    flex-wrap: wrap; /* allow multiple costs */
+}
+
+.cost-chip-dark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.55rem;
+    background: #000;
+    border-radius: 999px;
+}
+
+.cost-amt-dark {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
+    font-size: 2rem;
+}
+
+/* helps yellow coin pop on black */
+.cost-chip-dark img,
+.cost-chip-dark svg {
+    filter: drop-shadow(0 0 1px rgba(255,255,255,0.35));
+}
+.au-cost-row {
+    display: grid;
+    grid-template-columns: 70px 1fr auto; /* icon | amount | button */
+    align-items: center;
+    column-gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    /* Avoid “cost vanished” due to parent clipping */
+    overflow: visible;
+    min-width: 0;
+}
+
+.au-cost-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px; /* matches first column */
+}
+
+.au-cost-amount {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    /* Makes sure it doesn't get pushed off/collapsed */
+    min-width: 0;
+    white-space: nowrap;
+}
+
+
+/* Tablet / tight width: stack button under cost */
+@media (max-width: 900px) {
+    .au-cost-row {
+        grid-template-columns: 70px 1fr;
+        grid-template-areas:
+            "icon amount"
+            "btn  btn";
+        row-gap: 10px;
+    }
+
+    .au-cost-icon {
+        grid-area: icon;
+    }
+
+    .au-cost-amount {
+        grid-area: amount;
+    }
+}

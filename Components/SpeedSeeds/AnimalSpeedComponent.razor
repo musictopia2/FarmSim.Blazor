@@ -1,0 +1,51 @@
+﻿@inherits FarmComponentBase
+<div class="ss-topbar">
+    <div class="ss-seed">
+        <ImageButtonComponent Name="@CurrencyKeys.SpeedSeed" Height="50" />
+        <span class="ss-seed-count">@InventoryManager.Get(CurrencyKeys.SpeedSeed)</span>
+    </div>
+</div>
+
+<div class="ss-scroll">
+    <StopClickPropagation>
+        <WrapLayout RenderList="_animals" ColumnWidth="250px" Context="item">
+            <div class="ss-card">
+
+                <div class="ss-title">@item.AnimalName</div>
+
+                <div class="ss-produces">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="fw-bold">+ @GetDisplay(item)</div>
+                        <ResolvedImage 
+                            Name="@item.OutputData.Item"
+                            class="ss-produces-img"
+                            Alt="@item.OutputData.Item"
+                            />
+                        
+                    </div>
+
+                    <div class="barn-amount text-muted">
+
+                        <ResolvedImage Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Barn"
+                                       height="30" />
+                        <span>@InventoryManager.Get(item.OutputData.Item)</span>
+                    </div>
+                </div>
+
+                <!-- Requires -->
+                <div class="ss-req">
+                    <ItemRequirementDisplay Name="@item.InputData.Item"
+                                            Required="@item.InputData.Amount"
+                                            Have="@InventoryManager.Get(item.InputData.Item)"
+                                            WidthPx="150" />
+                </div>
+
+                <PrimaryButton
+                               OnClick="() => TryToUse(item)">
+                    Use
+                </PrimaryButton>
+
+            </div>
+        </WrapLayout>
+    </StopClickPropagation>
+</div>

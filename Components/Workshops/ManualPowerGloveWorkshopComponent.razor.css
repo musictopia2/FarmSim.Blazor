@@ -1,0 +1,76 @@
+﻿.glove-root {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 6vw;
+    align-items: center;
+    width: 100%;
+}
+
+.glove-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 240px;
+}
+
+.glove-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.glove-count {
+    margin-top: 2vh;
+}
+
+.glove-right {
+    display: flex;
+    flex-direction: column;
+    gap: 4vh;
+    align-items: flex-start;
+}
+
+.glove-top-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4vw;
+}
+
+.glove-arrows {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3vw;
+}
+
+.glove-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+
+.glove-submit {
+    display: flex;
+    align-items: center;
+}
+
+/* If screen is narrow, stack cleanly (still keeps your big sizes) */
+@media (max-width: 900px) {
+    .glove-root {
+        grid-template-columns: 1fr;
+        row-gap: 4vh;
+        justify-items: center;
+    }
+
+    .glove-right {
+        align-items: center;
+        text-align: center;
+    }
+
+    .glove-top-row {
+        flex-direction: column;
+        gap: 3vh;
+    }
+}

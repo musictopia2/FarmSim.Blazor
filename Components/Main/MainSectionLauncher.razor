@@ -1,0 +1,21 @@
+﻿<PopupViewport
+    TapToClose="true"
+    HeaderTitle="@ReadyCategory.ToString()"
+                Visible="_show"
+                VisibleChanged="ChangeWorkshopVisible">
+    
+    @if (ReadyCategory == EnumMainSection.Workshops)
+    {
+        <StopClickPropagation>
+            <WorkshopsComponent />
+        </StopClickPropagation>
+        
+        return;
+    }
+</PopupViewport>
+<div class="load-wrap">
+    <PrimaryButton FontSize="2rem" OnClick="LaunchAsync">
+        Show @ReadyCategory.ToString()
+        <span class="main-ready-dot @(_ready ? "is-ready" : "is-not-ready")"></span>
+    </PrimaryButton>
+</div>

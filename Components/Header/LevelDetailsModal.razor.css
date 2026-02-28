@@ -1,0 +1,73 @@
+﻿.lvl-details {
+    display: grid;
+    gap: 14px;
+}
+
+.lvl-summary {
+    font-size: 1.15rem;
+    font-weight: 600;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+}
+
+.lvl-next {
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.lvl-tolevel {
+    font-size: 1.15rem;
+    font-weight: 600;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+}
+
+.lvl-strong {
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.lvl-section-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+}
+
+
+
+.lvl-reward-row {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    align-items: center;
+    gap: 12px;
+}
+
+::deep .lvl-reward-img {
+    width: 60px; /* keeps it stable even if height is set */
+    height: 60px;
+    object-fit: contain;
+}
+
+
+
+.lvl-reward-amt {
+    font-size: 2.20rem;
+    font-weight: 800;
+}
+.lvl-reward-card {
+    width: 100%;
+    min-height: 64px;
+    display: grid;
+    grid-template-columns: 60px 1fr; /* ICON | AMOUNT */
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border: 2px solid #cfcfcf;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.10);
+    cursor: pointer;
+    user-select: none;
+}

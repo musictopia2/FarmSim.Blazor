@@ -1,0 +1,64 @@
+﻿.boosts-root {
+    padding: 12px;
+    height: 50vh;
+    overflow-y: auto;
+}
+.boost-icon-slot {
+    width: 72px;
+    height: 72px;
+    display: grid;
+    place-items: center;
+}
+.boosts-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.boosts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    align-items: start;
+}
+
+.boost-card {
+    border: 1px solid;
+    border-color: black;
+    border-radius: 12px;
+    padding: 12px;
+    display: grid;
+    gap: 8px;
+}
+
+.boost-img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+}
+
+.boost-name {
+    font-weight: 700;
+}
+
+.boost-meta {
+    font-size: 0.95rem;
+    display: grid;
+    gap: 4px;
+    opacity: 0.95;
+}
+
+.boost-btn {
+    height: 40px;
+    border-radius: 10px;
+    border: 0;
+    cursor: pointer;
+}
+.boost-detail-line {
+    min-height: 1.2em; /* reserves space even when blank */
+    margin-top: 4px;
+}
+
+.boost-detail-placeholder {
+    visibility: hidden; /* takes space but not visible */
+}

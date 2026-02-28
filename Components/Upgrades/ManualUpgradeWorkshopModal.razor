@@ -1,0 +1,101 @@
+﻿@inherits FarmComponentBase
+@Workshop.Name.GetWords: Level @_workshopLevel
+<TabButtonContainer>
+    <ObjectRepeater RenderList="_columns" Context="column">
+        <TabPage>
+            <HeaderTemplate>
+                <span class="tab-header-root">
+                    <span class="tab-level">Level @column.LevelDesired</span>
+
+                    <span class="tab-icon-slot">
+                        @if (_workshopLevel >= column.LevelDesired)
+                        {
+                            <svg class="upgrade-check" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M20.285 6.709a1 1 0 0 1 0 1.414l-9.19 9.19a1 1 0 0 1-1.414 0L3.715 11.35a1 1 0 1 1 1.414-1.414l4.243 4.243 8.483-8.483a1 1 0 0 1 1.414 0z" />
+                            </svg>
+                        }
+                        else if (column.LevelRequired > _personalLevel || column.LevelDesired > _workshopLevel + 1)
+                        {
+                            <BoostIconComponent ImageSize="30" Name="Padlock" />
+                        }
+                    </span>
+                </span>
+            </HeaderTemplate>
+            <ChildContent>
+                @if (column.LevelDesired == _workshopLevel + 1 && _personalLevel >= column.LevelRequired)
+                {
+                    <div>
+                        Next Up:  Level @column.LevelDesired Benefits
+                    </div>
+                }
+                else if (_workshopLevel >= column.LevelDesired)
+                {
+                    <div>
+                        Level @column.LevelDesired Benefits
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        Level @column.LevelDesired: Locked
+                    </div>
+                }
+                <div>
+                    Harvest Time: @GetFaster(column.LevelDesired)
+                </div>
+                <div class="middleHeight">
+                    @if (column.LevelDesired == _maxLevels)
+                    {
+                        <div>
+                            Has a chance of getting an extra item each time you craft a recipe.
+                        </div>
+                    }
+                </div>
+                <div>
+                    @if (column.LevelRequired > _personalLevel)
+                    {
+                        <div>
+                            Reach Level @column.LevelRequired To Unlock!
+                        </div>
+                    }
+                    else if (_workshopLevel == _maxLevels && column.LevelDesired == _maxLevels)
+                    {
+                        <div>
+                            Fully upgraded!  Great Job!
+                        </div>
+                    }
+                    else if (column.LevelDesired == _workshopLevel + 1)
+                    {
+                        <div class="upgrade-row-compact">
+                            <div class="upgrade-costs-left">
+                                @foreach (var cost in column.Costs)
+                                {
+                                    <span class="cost-chip-dark">
+                                        <BoostIconComponent ImageSize="60" Name="@cost.Key" />
+                                        <span class="cost-amt-dark">@cost.Value.ToString("N0")</span>
+                                    </span>
+                                }
+                            </div>
+
+                            <SuccessButton FontSize="2rem" OnClick="Upgrade">
+                                Upgrade Now
+                            </SuccessButton>
+                        </div>
+                    }
+                    else if (_workshopLevel + 1 >= column.LevelDesired)
+                    {
+                        <div>
+                            Already Purchased
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            Purchase Lower Level Upgrade First
+                        </div>
+                    }
+                </div>
+            </ChildContent>
+        </TabPage>
+    </ObjectRepeater>
+</TabButtonContainer>

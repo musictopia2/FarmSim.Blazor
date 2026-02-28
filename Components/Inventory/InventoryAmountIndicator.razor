@@ -1,0 +1,12 @@
+﻿@inherits InventoryAwareComponentBase
+<div class="@CssClass" style="@FinalStyle">
+    <div class="@CssClass" style="@FinalStyle">
+        @if (ShowIcon)
+        {
+            <ResolvedImage Name="@IconName"
+                           height="@ResolvedHeight" />
+        }
+        <span style="font-size: @FontSize;">@CurrentAmount</span>
+    </div>
+    
+</div>

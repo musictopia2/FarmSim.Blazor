@@ -1,0 +1,25 @@
+﻿.coin-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    font-weight: 800;
+    user-select: none;
+}
+
+::deep .coin-img {
+    width: 44px;
+    height: 44px;
+}
+
+.coin-text {
+    /* reserve enough width so 1-999999 doesn't change layout */
+    display: inline-block;
+    min-width: 7ch; /* adjust: 5ch for up to 99999, 7ch for up to 999999 */
+    text-align: right;
+    /* stops jitter from proportional digits */
+    font-variant-numeric: tabular-nums;
+}

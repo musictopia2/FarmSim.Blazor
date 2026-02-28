@@ -1,0 +1,28 @@
+﻿@inherits TimedOnlyComponent
+
+<BasicProgressModal @bind-Visible="_showpopup">
+    <TreeProgressModal Tree="Tree"
+        OnOpenUpgrades="OpenUpgrades"
+        />
+</BasicProgressModal>
+
+
+<PopupViewport ShowHeaders="false"
+               @bind-Visible="_showUpgrades"
+               TapToClose="true">
+    <ManualUpgradeTreeModal Tree="Tree"
+                      OnUpgraded="Upgraded" />
+</PopupViewport>
+
+<TreeImageComponent ItemName="@Tree.ItemName"
+    DisplayAmount="_ready"
+    OnClick="Process"
+>
+    @if (!string.IsNullOrWhiteSpace(_rentalTimeLeft))
+    {
+        <div class="tree-positioning rental-timer">
+            @_rentalTimeLeft
+        </div>
+    }
+</TreeImageComponent>
+

@@ -1,0 +1,32 @@
+﻿@page "/farm/{Theme}/{Player}/{ProfileId}/{SlotText}"
+@if (_loaded == false)
+{
+    return;
+}
+@if (_allowed == false)
+{
+    <div style="font-size: 3rem;">
+        Since you chose automation, you don't get a coop partner.
+    </div>
+    return;
+}
+@if (_coinNotAllowed)
+{
+    <div style="font-size: 3rem;">
+        Since you chose automation and this was a coin farm, you don't get the coin farm anymore.
+    </div>
+    return;
+}
+@if (_needsSetup)
+{
+    <StartingOptions OnSave="SaveRulesAndInitializeAsync" />
+    return;
+}
+@if (_farmContainer is null)
+{
+    return;
+}
+<CascadingValue Value="_farmContainer">
+    <MainComponent
+        />
+</CascadingValue>

@@ -1,0 +1,64 @@
+﻿@inherits InventoryAwareComponentBase
+<div style="position: relative; width: 200px;"
+     @onclick="OnClick">
+    <!-- Base tree -->
+
+    <ResolvedImage Name="@FarmSim.Images.Standard.Assets.PngImageAssets.Tree"
+                   width="200" />
+    @ChildContent
+
+
+    <InventoryAmountIndicator ItemName="@ItemName"
+                              Class="inventory-positioning"
+                              FontSize="2rem"
+                              Height="60" />
+
+    @if (DisplayAmount > 0)
+    {
+        <ResolvedImage Name="@ItemName"
+                       style="
+                        position: absolute;
+                        top: 60px;
+                        left: 20px;
+                        width: 30px;
+                        height: 30px;
+                     " />
+
+        @if (DisplayAmount > 1)
+        {
+            <ResolvedImage Name="@ItemName"
+                           style="
+                                    position: absolute;
+                                    top: 60px;
+                                    left: 60px;
+                                    width: 30px;
+                                    height: 30px;
+                                 " />
+
+        }
+        @if (DisplayAmount > 2)
+        {
+            <ResolvedImage Name="@ItemName"
+                           style="
+                                    position: absolute;
+                                    top: 60px;
+                                    left: 100px;
+                                    width: 30px;
+                                    height: 30px;
+                                 " />
+
+        }
+        @if (DisplayAmount > 3)
+        {
+            <ResolvedImage Name="@ItemName"
+                           style="
+                                    position: absolute;
+                                    top: 60px;
+                                    left: 140px;
+                                    width: 30px;
+                                    height: 30px;
+                                 " />
+
+        }
+    }
+</div>

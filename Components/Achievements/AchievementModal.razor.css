@@ -1,0 +1,67 @@
+﻿.ach-scroll {
+    padding: 10px;
+}
+
+.ach-empty {
+    padding: 14px;
+    opacity: .8;
+}
+
+.ach-card {
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+    height: 150px;
+}
+
+.ach-card-done {
+    opacity: .95;
+}
+
+.ach-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.ach-title {
+    font-weight: 700;
+}
+
+.ach-coin {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ach-sub {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    opacity: .85;
+    font-size: .9rem;
+}
+
+.ach-repeat {
+    font-size: .85rem;
+    opacity: .8;
+}
+
+.ach-bar {
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(0,0,0,.10);
+    overflow: hidden;
+}
+
+.ach-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background-color: blue;
+}

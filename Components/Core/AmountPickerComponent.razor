@@ -1,0 +1,24 @@
+﻿@inherits FarmComponentBase
+
+<StopClickPropagation>
+    <div style="font-size: 3rem;">
+        Proposed @ActionVerb Amount: @_proposed (Max: @Limit)
+    </div>
+
+    <ArrowLeftComponent TargetHeight="10vh" Clicked="GoLeft" />
+    <PrimaryButton FontSize="3rem" OnClick="ProposeOne">@ActionVerb 1</PrimaryButton>
+    <PrimaryButton FontSize="3rem" OnClick="OpenCustom">@ActionVerb Custom</PrimaryButton>
+    <PrimaryButton FontSize="3rem" OnClick="ProposeAll">@ActionVerb All</PrimaryButton>
+    <ArrowRightComponent TargetHeight="10vh" Clicked="GoRight" />
+
+    <PrimaryButton FontSize="3rem;" OnClick="OnCancel">Cancel</PrimaryButton>
+
+    @if (_proposed > 0)
+    {
+        <div>
+            <DangerButton FontSize="3rem" OnClick="Submit">
+                @ActionVerb @_proposed
+            </DangerButton>
+        </div>
+    }
+</StopClickPropagation>

@@ -1,0 +1,58 @@
+﻿@inherits FarmComponentBase
+<StopClickPropagation Style="font-size: 3rem;">
+    <WhiteFullPage>
+
+        @if (_hasGloves == false)
+        {
+            <div style="font-size: 5rem;">
+                You have no more worksite power gloves left.
+            </div>
+            <div>
+                <PrimaryButton FontSize="5rem" OnClick="OnClose">
+                    Cancel
+                </PrimaryButton>
+            </div>
+            return;
+        }
+        <div class="glove-root">
+            <!-- LEFT: icon + inventory -->
+            <div class="glove-left">
+                <div class="glove-icon">
+                    <BoostIconComponent Name="@CurrencyKeys.PowerGloveWorksite" ImageSize="140" />
+                </div>
+
+                <div class="glove-count" style="font-size: 5rem;">
+                    @InventoryManager.Get(CurrencyKeys.PowerGloveWorksite)
+                </div>
+            </div>
+
+            <!-- RIGHT: controls + summary -->
+            <div class="glove-right">
+                <div class="glove-top-row">
+                    <PrimaryButton FontSize="3rem" OnClick="OnClose">
+                        Close
+                    </PrimaryButton>
+
+                    <div class="glove-arrows">
+                        <ArrowLeftComponent TargetHeight="10vh" Clicked="Decrease" />
+                        <ArrowRightComponent TargetHeight="10vh" Clicked="Increase" />
+                    </div>
+                </div>
+
+                <div class="glove-summary">
+                    <div>Used Amount @_used</div>
+                    <div>Decreased By: @TimeDecreased</div>
+                </div>
+
+                <div class="glove-submit">
+                    <PrimaryButton FontSize="3rem" OnClick="Submit">
+                        Use Power Glove
+                    </PrimaryButton>
+                </div>
+            </div>
+        </div>
+
+
+
+    </WhiteFullPage>
+</StopClickPropagation>

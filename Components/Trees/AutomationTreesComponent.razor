@@ -1,0 +1,16 @@
+﻿@inherits FarmComponentBase
+@if (_selectedTree is not null)
+{
+    <AutomationTreeComponent Tree="_selectedTree"
+                             NextClicked="Next"
+                             PreviousClicked="Previous"   />
+    return;
+}
+<div class="full-scrollable">
+    <WrapLayout ColumnWidth="200px" RenderList="_trees" Context="tree">
+        <TreeImageComponent DisplayAmount="4" 
+            OnClick="() => SelectTree(tree)"
+            ItemName="@tree.ItemName"
+            />
+    </WrapLayout>
+</div>

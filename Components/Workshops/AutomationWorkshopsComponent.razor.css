@@ -1,0 +1,6 @@
+::deep .workshop-img {
+    width: 95px;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+}
