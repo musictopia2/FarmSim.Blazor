@@ -33,6 +33,25 @@ public partial class AutomationWorkshopComponent(IToast toast)
     private bool _showConfirmation = false;
     private bool _showDecisionui = false;
     private int _virtualCount;
+
+
+    private string? _priorityItem;
+    private bool IsPrioritySelectedItem =>
+        _priorityItem is not null &&
+        _priorityItem.Equals(_selectedItem, StringComparison.OrdinalIgnoreCase);
+
+    private string BuildingDetails
+    {
+        get
+        {
+            if (IsPrioritySelectedItem == false)
+            {
+                return Workshop.BuildingName;
+            }
+            return $"{Workshop.BuildingName} {_priorityItem}";
+        }
+    }
+
     private string GetConfirmationMessage =>
         $"Are you sure you want to use the finish single workshop to complete this?  You have {InventoryManager.Get(CurrencyKeys.FinishSingleWorkshop)} left";
     private Dictionary<string, int> FullRequirements
@@ -61,6 +80,18 @@ public partial class AutomationWorkshopComponent(IToast toast)
         return base.OnTickAsync();
     }
 
+    private async Task MakePriority()
+    {
+        WorkshopAutomationManager.SetPriorityItem(Workshop.BuildingName, _selectedItem);
+        RefreshItems();
+    }
+
+    private async Task ClearPriority()
+    {
+        WorkshopAutomationManager.SetPriorityItem(Workshop.BuildingName, null);
+        RefreshItems();
+    }
+
     private void RefreshItems()
     {
         if (string.IsNullOrWhiteSpace(Workshop?.BuildingName))
@@ -82,6 +113,7 @@ public partial class AutomationWorkshopComponent(IToast toast)
         {
             _selectedItem = null;
         }
+        _priorityItem = WorkshopAutomationManager.GetPriorityItem(Workshop.BuildingName);
     }
 
     private void SelectItem(string item)

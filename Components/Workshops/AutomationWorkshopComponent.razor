@@ -54,7 +54,7 @@
             <ArrowRightComponent TargetHeight="10vh" Clicked="NextClicked" />
             <ResolvedImage Name="@Workshop.BuildingName" height="90" />
             <div style="font-size: 2rem;">
-                @Workshop.BuildingName
+                @BuildingDetails
             </div>
             <AutomationUpgradeReducedTimeButton Target="@Workshop.BuildingName" />
             <AutomationUpgradeVirtualCountButton Target="@Workshop.BuildingName" PreviousVirtualCount="@_virtualCount" />
@@ -127,6 +127,21 @@
     <PrimaryButton FontSize="1.5rem" OnClick="BackToItems">
         Back
     </PrimaryButton>
+    @if (_outstanding > 0)
+    {
+        @if (IsPrioritySelectedItem)
+        {
+            <PrimaryButton FontSize="1.5rem" OnClick="ClearPriority">
+                Clear Priority
+            </PrimaryButton>
+        }
+        else
+        {
+            <PrimaryButton FontSize="1.5rem" OnClick="MakePriority">
+                Prioritize
+            </PrimaryButton>
+        }
+    }
     @if (_processing)
     {
         <ImageButtonComponent Name="@CurrencyKeys.PowerGloveWorkshop" Height="80" OnClick="OnPowerGloveClicked" />
