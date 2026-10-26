@@ -13,9 +13,9 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="10.0.1" />
+    <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="10.0.3" />
     <PackageReference Include="Musictopia2.FarmSim.Domain" Version="10.0.1" />
-    <PackageReference Include="Musictopia2.FarmSim.Images.Standard" Version="10.0.1" />
+    <PackageReference Include="Musictopia2.FarmSim.Images.Standard" Version="10.0.2" />
   </ItemGroup>
   <Target Name="ValidateStaticWebAssetContract" BeforeTargets="PrepareForBuild" Condition="Exists('wwwroot')">
     <Error Condition="'$(PackageId)' != 'Musictopia2.$(MSBuildProjectName)'" Text="Static web asset contract violation.&#xD;&#xA;PackageId must be Musictopia.$(MSBuildProjectName).&#xD;&#xA;See solution pattern in project: Musictopia.FarmSim.Blazor (first fixed case)." />
