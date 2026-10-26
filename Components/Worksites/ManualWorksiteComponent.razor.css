@@ -11,7 +11,7 @@
 
 /* Square fits inside that height */
 ::deep .busy {
-    height: 72%;
+    height: 85%;
     aspect-ratio: 1 / 1;
     /* IMPORTANT: when height is driving size, width must be allowed to follow */
     width: auto;
