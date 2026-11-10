@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <Nullable>enable</Nullable>
     <PackageId>Musictopia2.$(MSBuildProjectName)</PackageId>
     <StaticWebAssetBasePath>_content/$(MSBuildProjectName)</StaticWebAssetBasePath>
@@ -13,15 +13,15 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="10.0.3" />
-    <PackageReference Include="Musictopia2.FarmSim.Domain" Version="10.0.1" />
-    <PackageReference Include="Musictopia2.FarmSim.Images.Standard" Version="10.0.2" />
+    <PackageReference Include="Musictopia2.BasicBlazorLibrary" Version="11.0.1" />
+    <PackageReference Include="Musictopia2.FarmSim.Domain" Version="0.0.1" />
+    <PackageReference Include="Musictopia2.FarmSim.Images.Standard" Version="0.0.1" />
   </ItemGroup>
   <Target Name="ValidateStaticWebAssetContract" BeforeTargets="PrepareForBuild" Condition="Exists('wwwroot')">
     <Error Condition="'$(PackageId)' != 'Musictopia2.$(MSBuildProjectName)'" Text="Static web asset contract violation.&#xD;&#xA;PackageId must be Musictopia.$(MSBuildProjectName).&#xD;&#xA;See solution pattern in project: Musictopia.FarmSim.Blazor (first fixed case)." />
     <Error Condition="'$(StaticWebAssetBasePath)' != '_content/$(MSBuildProjectName)'" Text="Static web asset contract violation.&#xD;&#xA;StaticWebAssetBasePath must be _content/$(MSBuildProjectName).&#xD;&#xA;See solution pattern in project: Musictopia.FarmSim.Blazor (first fixed case)." />
   </Target>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="C:\VS\Apps\CommandLines\PostBuildPackageHandler\bin\Release\net10.0\PostBuildPackageHandler.exe $(ProjectName) $(ProjectDir) $(ProjectFileName) $(TargetDir)" Condition="'$(Configuration)' == 'Release' and '$(RunPostBuildAppCondition)' == 'true'" />
+    <Exec Command="C:\VS\Apps\CommandLines\PostBuildPackageHandler\bin\Release\net11.0\PostBuildPackageHandler.exe $(ProjectName) $(ProjectDir) $(ProjectFileName) $(TargetDir)" Condition="'$(Configuration)' == 'Release' and '$(RunPostBuildAppCondition)' == 'true'" />
   </Target>
 </Project>
